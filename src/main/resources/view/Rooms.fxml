@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="800.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse71.projectrubyhall.controller.RoomsController">
+   <children>
+      <VBox layoutX="14.0" layoutY="128.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="150.0">
+         <children>
+            <TableView fx:id="tblRoom" onMouseClicked="#onClickRow" prefHeight="618.0" prefWidth="933.0">
+              <columns>
+                <TableColumn fx:id="tColRoomId" prefWidth="183.19991779327393" text="Room ID" />
+                <TableColumn fx:id="tColRoomType" prefWidth="176.00001525878906" text="Room Type" />
+                  <TableColumn fx:id="tColFloor" prefWidth="167.20001220703125" text="Floor" />
+                  <TableColumn fx:id="tColState" prefWidth="174.4000244140625" text="State" />
+                  <TableColumn fx:id="tColFacilities" prefWidth="216.79998779296875" text="Facilities" />
+              </columns>
+            </TableView>
+            <HBox alignment="BOTTOM_RIGHT" prefHeight="4.0" prefWidth="933.0" spacing="30.0">
+               <children>
+                  <Button fx:id="btnAdd" mnemonicParsing="false" onAction="#OnClickAdd" style="-fx-background-radius: 10;" text="Add Room">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnUpdate" mnemonicParsing="false" onAction="#OnClickUpdate" style="-fx-background-radius: 10;" text="Update">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnDelete" mnemonicParsing="false" onAction="#OnClickDelete" style="-fx-background-radius: 10;" text="Delete">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="30.0" top="30.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+      <Label layoutX="418.0" layoutY="14.0" text="Rooms">
+         <font>
+            <Font name="System Bold" size="36.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>
