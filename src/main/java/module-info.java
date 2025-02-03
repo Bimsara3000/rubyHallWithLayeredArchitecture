@@ -2,6 +2,9 @@ module lk.ijse.gdse71.rubyhallwithlayeredarchitecture {
     requires javafx.controls;
     requires javafx.fxml;
     requires java.sql;
+    requires lombok;
+    requires net.sf.jasperreports.core;
+    requires java.mail;
 
 
     opens lk.ijse.gdse71.rubyhallwithlayeredarchitecture.controller to javafx.fxml;
