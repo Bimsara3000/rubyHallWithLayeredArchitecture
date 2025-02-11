@@ -1,31 +1,32 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.UserDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.UserDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class UserDAOImpl {
+public class UserDAOImpl implements UserDAO {
 
-    public UserDTO checkDetails(String uId) throws SQLException {
+    public User checkDetails(String uId) throws SQLException, ClassNotFoundException {
         ResultSet details = CrudUtil.execute("select * from user where userId = ?", uId);
 
         if (details.next()) {
-            UserDTO loginDTO = new UserDTO();
-            loginDTO.setUserId(details.getString("userId"));
-            loginDTO.setJobRoleId(details.getString("jobRoleId"));
-            loginDTO.setEmail(details.getString("email"));
-            loginDTO.setPassword(details.getString("password"));
+            User login = new User();
+            login.setUserId(details.getString("userId"));
+            login.setJobRoleId(details.getString("jobRoleId"));
+            login.setEmail(details.getString("email"));
+            login.setPassword(details.getString("password"));
 
-            return loginDTO;
+            return login;
         }
 
         return null;
     }
 
-    public String getUserName(String userId) throws SQLException {
+    public String getName(String userId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select name from user where userID = ?", userId);
 
         if (resultSet.next()){
@@ -34,25 +35,25 @@ public class UserDAOImpl {
         return null;
     }
 
-    public ArrayList<UserDTO> getAllUsers() throws SQLException {
+    public ArrayList<User> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from user");
 
-        ArrayList<UserDTO> users = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
 
         while (resultSet.next()) {
-            UserDTO userDTO = new UserDTO(
+            User user = new User(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
                     resultSet.getString(4),
                     resultSet.getString(5)
             );
-            users.add(userDTO);
+            users.add(user);
         }
         return users;
     }
 
-    public String getNextUserId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select userId from user order by userId desc limit 1");
 
         if (rst.next()) {
@@ -65,29 +66,29 @@ public class UserDAOImpl {
         return "U001";
     }
 
-    public boolean saveUser(UserDTO userDTO) throws SQLException {
+    public boolean save(User user) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "insert into user values (?,?,?,?,?)",
-                userDTO.getUserId(),
-                userDTO.getJobRoleId(),
-                userDTO.getName(),
-                userDTO.getEmail(),
-                userDTO.getPassword()
+                user.getUserId(),
+                user.getJobRoleId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPassword()
         );
     }
 
-    public boolean updateUser(UserDTO userDTO) throws SQLException {
+    public boolean update(User user) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "update user set jobRoleId=?,name=?,email=?,password=? where userId=?",
-                userDTO.getJobRoleId(),
-                userDTO.getName(),
-                userDTO.getEmail(),
-                userDTO.getPassword(),
-                userDTO.getUserId()
+                user.getJobRoleId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getUserId()
         );
     }
 
-    public boolean deleteUser(String userId) throws SQLException {
+    public boolean delete(String userId) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "delete from user where userId = ?",
                 userId

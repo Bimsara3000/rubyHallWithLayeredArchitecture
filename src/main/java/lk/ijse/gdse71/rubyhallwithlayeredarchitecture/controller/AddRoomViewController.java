@@ -9,10 +9,8 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import lk.ijse.gdse71.projectrubyhall.db.DBConnection;
-import lk.ijse.gdse71.projectrubyhall.dto.RoomDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.RoomFacilityDTO;
-import lk.ijse.gdse71.projectrubyhall.model.*;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.RoomDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.RoomFacilityDTO;
 
 import java.net.URL;
 import java.sql.Connection;

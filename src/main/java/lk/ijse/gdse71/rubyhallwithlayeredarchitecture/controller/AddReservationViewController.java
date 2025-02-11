@@ -11,8 +11,6 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import lk.ijse.gdse71.projectrubyhall.model.ReservationModel;
-import lk.ijse.gdse71.projectrubyhall.model.UserModel;
 
 import java.io.IOException;
 import java.net.URL;

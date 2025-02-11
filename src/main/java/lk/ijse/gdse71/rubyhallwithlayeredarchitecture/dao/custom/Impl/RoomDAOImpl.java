@@ -1,20 +1,21 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.RoomDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.RoomDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Room;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class RoomDAOImpl {
-    public ArrayList<RoomDTO> getAllRooms() throws SQLException {
+public class RoomDAOImpl implements RoomDAO {
+    public ArrayList<Room> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from room");
 
-        ArrayList<RoomDTO> rooms = new ArrayList<>();
+        ArrayList<Room> rooms = new ArrayList<>();
 
         while (resultSet.next()) {
-            RoomDTO room = new RoomDTO(
+            Room room = new Room(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -25,7 +26,7 @@ public class RoomDAOImpl {
         return rooms;
     }
 
-    public String getNextRoomId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select roomId from room order by roomId desc limit 1");
 
         if (rst.next()) {
@@ -38,34 +39,39 @@ public class RoomDAOImpl {
         return "R001";
     }
 
-    public boolean saveRoom(RoomDTO roomDTO) throws SQLException {
+    public boolean save(Room room) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "insert into room values (?,?,?,?)",
-                roomDTO.getRoomId(),
-                roomDTO.getRoomTypeId(),
-                roomDTO.getFloorId(),
-                roomDTO.getState()
+                room.getRoomId(),
+                room.getRoomTypeId(),
+                room.getFloorId(),
+                room.getState()
         );
     }
 
-    public boolean updateRoom(RoomDTO roomDTO) throws SQLException {
+    public boolean update(Room room) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "update room set roomTypeID=?,floorId=?,state=? where roomId=?",
-                roomDTO.getRoomTypeId(),
-                roomDTO.getFloorId(),
-                roomDTO.getState(),
-                roomDTO.getRoomId()
+                room.getRoomTypeId(),
+                room.getFloorId(),
+                room.getState(),
+                room.getRoomId()
         );
     }
 
-    public boolean deleteRoom(String roomId) throws SQLException {
+    public boolean delete(String roomId) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "delete from room where roomId = ?",
                 roomId
         );
     }
 
-    public ArrayList<String> getRooms(String rId, String fId) throws SQLException {
+    @Override
+    public String getName(String id) throws SQLException, ClassNotFoundException {
+        return "";
+    }
+
+    public ArrayList<String> getRooms(String rId, String fId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select roomId from room where roomTypeId = 'rId' and floorId = 'fId'");
 
         ArrayList<String> rooms = new ArrayList<>();
@@ -77,7 +83,7 @@ public class RoomDAOImpl {
         return rooms;
     }
 
-    public ArrayList<String> getAllAvailableRooms() throws SQLException {
+    public ArrayList<String> getAllAvailableRooms() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select roomId from room where state = 'Available'");
 
         ArrayList<String> rooms = new ArrayList<>();

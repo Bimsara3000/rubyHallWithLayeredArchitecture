@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class GuestsController implements Initializable {
-    GuestBO guestBO = (GuestBO) BOFactory.getInstance();
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance(BOFactory.BOType.USER);
 
     @FXML
     private Button btnAdd;

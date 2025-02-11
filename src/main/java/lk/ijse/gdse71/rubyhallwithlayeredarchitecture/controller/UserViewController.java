@@ -8,10 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.UserDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.UserTM;
-import lk.ijse.gdse71.projectrubyhall.model.JobRoleModel;
-import lk.ijse.gdse71.projectrubyhall.model.UserModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.UserBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.UserDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.UserTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -63,8 +63,7 @@ public class UserViewController implements Initializable {
     @FXML
     private TextField txtPassword;
 
-    UserModel userModel = new UserModel();
-    JobRoleModel jobRoleModel = new JobRoleModel();
+    UserBO userBO = (UserBO) BOFactory.getInstance(BOFactory.BOType.USER);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -81,7 +80,7 @@ public class UserViewController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = userModel.deleteUser(user.getUserId());
+                boolean isDeleted = userBO.delete(user.getUserId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The user is deleted!").show();
                     loadTable();
@@ -91,6 +90,8 @@ public class UserViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -133,7 +134,7 @@ public class UserViewController implements Initializable {
                         password
                 );
 
-                boolean isSaved = userModel.saveUser(userDTO);
+                boolean isSaved = userBO.save(userDTO);
 
                 if (isSaved) {
                     refresh();
@@ -144,6 +145,8 @@ public class UserViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -193,7 +196,7 @@ public class UserViewController implements Initializable {
                         password
                 );
 
-                boolean isSaved = userModel.updateUser(userDTO);
+                boolean isSaved = userBO.update(userDTO);
 
                 if (isSaved) {
                     refresh();
@@ -204,6 +207,8 @@ public class UserViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -229,7 +234,7 @@ public class UserViewController implements Initializable {
 
     public void loadTable() {
         try {
-            ArrayList<UserDTO> userDTOS = userModel.getAllUsers();
+            ArrayList<UserDTO> userDTOS = userBO.getAll();
 
             ObservableList<UserTM> userTMS = FXCollections.observableArrayList();
 
@@ -248,16 +253,20 @@ public class UserViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadNextServiceId() {
         try {
-            String nextUserId = userModel.getNextUserId();
+            String nextUserId = userBO.getNextId();
             lblUserId.setText(nextUserId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
