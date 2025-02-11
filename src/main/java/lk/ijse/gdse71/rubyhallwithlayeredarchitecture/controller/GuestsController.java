@@ -16,9 +16,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import lk.ijse.gdse71.projectrubyhall.dto.GuestDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.GuestTM;
-import lk.ijse.gdse71.projectrubyhall.model.GuestModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.GuestBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.GuestDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.GuestTM;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,6 +29,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class GuestsController implements Initializable {
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance();
 
     @FXML
     private Button btnAdd;
@@ -76,8 +78,6 @@ public class GuestsController implements Initializable {
         loadTable();
     }
 
-    GuestModel guestModel = new GuestModel();
-
     @FXML
     void onClickDelete(ActionEvent event) {
         GuestTM guest = tblGuest.getSelectionModel().getSelectedItem();
@@ -93,7 +93,7 @@ public class GuestsController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = guestModel.deleteGuest(guest.getGuestId());
+                boolean isDeleted = guestBO.delete(guest.getGuestId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The guest is deleted!").show();
                     loadTable();
@@ -103,6 +103,8 @@ public class GuestsController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -149,7 +151,7 @@ public class GuestsController implements Initializable {
 
     public void loadTable() {
         try {
-            ArrayList<GuestDTO> guestDTOS = guestModel.getAllGuests();
+            ArrayList<GuestDTO> guestDTOS = guestBO.getAll();
 
             ObservableList<GuestTM> guestTMS = FXCollections.observableArrayList();
 
@@ -167,6 +169,8 @@ public class GuestsController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

@@ -1,6 +1,6 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo;
 
-import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.impl.AddGuestBOImpl;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.impl.GuestBOImpl;
 
 public class BOFactory {
     private static BOFactory boFactory;
@@ -11,12 +11,12 @@ public class BOFactory {
     }
 
     public enum BOType {
-        ADD_GUEST
+        GUEST
     }
 
     public SuperBO getBO(BOType type) {
         switch (type) {
-            case ADD_GUEST: return new AddGuestBOImpl();
+            case GUEST: return new GuestBOImpl();
             default: return null;
         }
     }

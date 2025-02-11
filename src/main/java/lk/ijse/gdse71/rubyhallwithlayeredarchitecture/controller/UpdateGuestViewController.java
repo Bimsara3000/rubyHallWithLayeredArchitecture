@@ -8,9 +8,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import lk.ijse.gdse71.projectrubyhall.dto.GuestDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.GuestTM;
-import lk.ijse.gdse71.projectrubyhall.model.GuestModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.GuestBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.GuestDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.GuestTM;
 import lombok.Setter;
 
 import java.net.URL;
@@ -18,6 +19,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class UpdateGuestViewController implements Initializable {
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance();
 
     @FXML
     private Label lblGuestId;
@@ -33,8 +35,6 @@ public class UpdateGuestViewController implements Initializable {
 
     @Setter
     private GuestTM guest;
-
-    GuestModel guestModel = new GuestModel();
 
     @FXML
     void onClickUpdate(ActionEvent event) {
@@ -78,7 +78,7 @@ public class UpdateGuestViewController implements Initializable {
             );
 
             try {
-                boolean isUpdated = guestModel.updateGuest(guestDTO);
+                boolean isUpdated = guestBO.update(guestDTO);
 
                 if (isUpdated) {
                     new Alert(Alert.AlertType.INFORMATION, "Guest saved!").show();
@@ -90,6 +90,8 @@ public class UpdateGuestViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }

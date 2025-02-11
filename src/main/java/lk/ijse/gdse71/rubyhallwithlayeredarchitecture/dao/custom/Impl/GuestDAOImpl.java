@@ -9,13 +9,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class GuestDAOImpl implements GuestDAO {
-    public ArrayList<GuestDTO> getAllGuests() throws SQLException {
+    public ArrayList<Guest> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from guest");
 
-        ArrayList<GuestDTO> guests = new ArrayList<>();
+        ArrayList<Guest> guests = new ArrayList<>();
 
         while (resultSet.next()) {
-            GuestDTO guest = new GuestDTO(
+            Guest guest = new Guest(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -49,24 +49,24 @@ public class GuestDAOImpl implements GuestDAO {
         );
     }
 
-    public boolean updateGuest(GuestDTO guestDTO) throws SQLException {
+    public boolean update(Guest guest) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "update guest set name=?,email=?,phoneNo=? where guestId=?",
-                guestDTO.getName(),
-                guestDTO.getEmail(),
-                guestDTO.getPhoneNo(),
-                guestDTO.getGuestId()
+                guest.getName(),
+                guest.getEmail(),
+                guest.getPhoneNo(),
+                guest.getGuestId()
         );
     }
 
-    public boolean deleteGuest(String guestId) throws SQLException {
+    public boolean delete(String guestId) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "delete from guest where guestId = ?",
                 guestId
         );
     }
 
-    public String getGuestName(String guestId) throws SQLException {
+    public String getName(String guestId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select name from guest where guestId = ?", guestId);
 
         if (resultSet.next()){

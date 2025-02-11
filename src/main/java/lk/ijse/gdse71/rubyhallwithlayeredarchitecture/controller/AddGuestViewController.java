@@ -6,14 +6,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import lk.ijse.gdse71.projectrubyhall.dto.GuestDTO;
-import lk.ijse.gdse71.projectrubyhall.model.GuestModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.GuestBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.GuestDTO;
 
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class AddGuestViewController implements Initializable {
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance();
 
     @FXML
     private Label lblGuestId;
@@ -68,7 +70,7 @@ public class AddGuestViewController implements Initializable {
             );
 
             try {
-                boolean isSaved = guestModel.saveGuest(guestDTO);
+                boolean isSaved = guestBO.save(guestDTO);
 
                 if (isSaved) {
                     refreshPage();
@@ -79,6 +81,8 @@ public class AddGuestViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -88,15 +92,15 @@ public class AddGuestViewController implements Initializable {
         refreshPage();
     }
 
-    GuestModel guestModel = new GuestModel();
-
     public void loadNextGuestId() {
         try {
-            String nextGuestId = guestModel.getNextGuestId();
+            String nextGuestId = guestBO.getNextId();
             lblGuestId.setText(nextGuestId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
