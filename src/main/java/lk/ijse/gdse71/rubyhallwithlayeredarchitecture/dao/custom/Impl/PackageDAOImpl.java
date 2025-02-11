@@ -1,15 +1,15 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.PackageDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.PackageDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Package;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class PackageDAOImpl {
-
-    public String getPackageName(String packageId) throws SQLException {
+public class PackageDAOImpl implements PackageDAO {
+    public String getName(String packageId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select name from package where packageId = ?", packageId);
 
         if (resultSet.next()){
@@ -18,7 +18,7 @@ public class PackageDAOImpl {
         return null;
     }
 
-    public String getNextPackageId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select packageId from package order by packageId desc limit 1");
 
         if (rst.next()) {
@@ -31,13 +31,13 @@ public class PackageDAOImpl {
         return "P001";
     }
 
-    public ArrayList<PackageDTO> getAllPackages() throws SQLException {
+    public ArrayList<Package> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from package");
 
-        ArrayList<PackageDTO> packageDTOS = new ArrayList<>();
+        ArrayList<Package> packageDTOS = new ArrayList<>();
 
         while (resultSet.next()) {
-            PackageDTO packageDTO = new PackageDTO(
+            Package p1 = new Package(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -45,36 +45,36 @@ public class PackageDAOImpl {
                     resultSet.getDouble(5),
                     resultSet.getString(6)
             );
-            packageDTOS.add(packageDTO);
+            packageDTOS.add(p1);
         }
         return packageDTOS;
     }
 
-    public boolean updatePackage(PackageDTO packageDTO) throws SQLException {
+    public boolean update(Package p1) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "update package set name=?,description=?,duration=?,price=?,validity=? where packageId=?",
-                packageDTO.getName(),
-                packageDTO.getDescription(),
-                packageDTO.getDuration(),
-                packageDTO.getPrice(),
-                packageDTO.getValidity(),
-                packageDTO.getPackageId()
+                p1.getName(),
+                p1.getDescription(),
+                p1.getDuration(),
+                p1.getPrice(),
+                p1.getValidity(),
+                p1.getPackageId()
         );
     }
 
-    public boolean savePackage(PackageDTO packageDTO) throws SQLException {
+    public boolean save(Package p1) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "insert into package values (?,?,?,?,?,?)",
-                packageDTO.getPackageId(),
-                packageDTO.getName(),
-                packageDTO.getDescription(),
-                packageDTO.getDuration(),
-                packageDTO.getPrice(),
-                packageDTO.getValidity()
+                p1.getPackageId(),
+                p1.getName(),
+                p1.getDescription(),
+                p1.getDuration(),
+                p1.getPrice(),
+                p1.getValidity()
         );
     }
 
-    public boolean deletePackage(String packageId) throws SQLException {
+    public boolean delete(String packageId) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "delete from package where packageId = ?",
                 packageId

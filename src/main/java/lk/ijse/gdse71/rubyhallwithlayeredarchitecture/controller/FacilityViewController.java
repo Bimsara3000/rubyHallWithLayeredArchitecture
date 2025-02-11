@@ -8,9 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.FacilityDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.FacilityTM;
-import lk.ijse.gdse71.projectrubyhall.model.FacilityModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.FacilityBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.FacilityDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.FacilityTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -50,7 +51,7 @@ public class FacilityViewController implements Initializable {
     @FXML
     private TextField txtPrice;
 
-    FacilityModel facilityModel = new FacilityModel();
+    FacilityBO facilityBO = (FacilityBO) BOFactory.getInstance(BOFactory.BOType.FACILITY);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -67,7 +68,7 @@ public class FacilityViewController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = facilityModel.deleteFacility(facilityTM.getFacilityId());
+                boolean isDeleted = facilityBO.delete(facilityTM.getFacilityId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The facility is deleted!").show();
                     loadTable();
@@ -77,6 +78,8 @@ public class FacilityViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -109,7 +112,7 @@ public class FacilityViewController implements Initializable {
                         Double.parseDouble(price)
                 );
 
-                boolean isSaved = facilityModel.saveFacility(facilityDTO);
+                boolean isSaved = facilityBO.save(facilityDTO);
 
                 if (isSaved) {
                     refresh();
@@ -120,6 +123,8 @@ public class FacilityViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -159,7 +164,7 @@ public class FacilityViewController implements Initializable {
                         Double.parseDouble(price)
                 );
 
-                boolean isSaved = facilityModel.updateFacility(facilityDTO);
+                boolean isSaved = facilityBO.update(facilityDTO);
 
                 if (isSaved) {
                     refresh();
@@ -170,6 +175,8 @@ public class FacilityViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -193,17 +200,19 @@ public class FacilityViewController implements Initializable {
 
     public void loadNextFacilityId() {
         try {
-            String nextFacilityId = facilityModel.getNextFacilityId();
+            String nextFacilityId = facilityBO.getNextId();
             lblFacilityId.setText(nextFacilityId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadTable() {
         try {
-            ArrayList<FacilityDTO> facilityDTOS = facilityModel.getAllFacilities();
+            ArrayList<FacilityDTO> facilityDTOS = facilityBO.getAll();
 
             ObservableList<FacilityTM> facilityTMS = FXCollections.observableArrayList();
 
@@ -221,6 +230,8 @@ public class FacilityViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

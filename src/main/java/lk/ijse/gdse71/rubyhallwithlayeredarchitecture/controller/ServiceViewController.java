@@ -8,9 +8,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.ServiceDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.ServiceTM;
-import lk.ijse.gdse71.projectrubyhall.model.ServiceModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.ServiceBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.DAOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.ServiceDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.ServiceTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -50,7 +52,7 @@ public class ServiceViewController implements Initializable {
     @FXML
     private TextField txtPrice;
 
-    ServiceModel serviceModel = new ServiceModel();
+    ServiceBO serviceBO = (ServiceBO) BOFactory.getInstance(BOFactory.BOType.SERVICE);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -67,7 +69,7 @@ public class ServiceViewController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = serviceModel.deleteService(serviceTM.getServiceId());
+                boolean isDeleted = serviceBO.delete(serviceTM.getServiceId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The service is deleted!").show();
                     loadTable();
@@ -77,6 +79,8 @@ public class ServiceViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -109,7 +113,7 @@ public class ServiceViewController implements Initializable {
                         Double.parseDouble(price)
                 );
 
-                boolean isSaved = serviceModel.saveService(serviceDTO);
+                boolean isSaved = serviceBO.save(serviceDTO);
 
                 if (isSaved) {
                     refresh();
@@ -120,6 +124,8 @@ public class ServiceViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -159,7 +165,7 @@ public class ServiceViewController implements Initializable {
                         Double.parseDouble(price)
                 );
 
-                boolean isSaved = serviceModel.updateService(serviceDTO);
+                boolean isSaved = serviceBO.update(serviceDTO);
 
                 if (isSaved) {
                     refresh();
@@ -170,6 +176,8 @@ public class ServiceViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -193,7 +201,7 @@ public class ServiceViewController implements Initializable {
 
     public void loadTable() {
         try {
-            ArrayList< ServiceDTO> serviceDTOS = serviceModel.getAllServices();
+            ArrayList< ServiceDTO> serviceDTOS = serviceBO.getAll();
 
             ObservableList<ServiceTM> serviceTMS = FXCollections.observableArrayList();
 
@@ -211,16 +219,20 @@ public class ServiceViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadNextServiceId() {
         try {
-            String nextServiceId = serviceModel.getNextServiceId();
+            String nextServiceId = serviceBO.getNextId();
             lblServiceId.setText(nextServiceId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

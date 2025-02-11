@@ -1,30 +1,30 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.ServiceDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ServiceDAOImpl {
-    public ArrayList<ServiceDTO> getAllServices() throws SQLException {
+    public ArrayList<Service> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from service");
 
-        ArrayList<ServiceDTO> serviceDTOS = new ArrayList<>();
+        ArrayList<Service> serviceDTOS = new ArrayList<>();
 
         while (resultSet.next()) {
-            ServiceDTO serviceDTO = new ServiceDTO(
+            Service service = new Service(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getDouble(3)
             );
-            serviceDTOS.add(serviceDTO);
+            serviceDTOS.add(service);
         }
         return serviceDTOS;
     }
 
-    public String getNextServiceId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select serviceId from service order by serviceId desc limit 1");
 
         if (rst.next()) {
@@ -37,7 +37,7 @@ public class ServiceDAOImpl {
         return "S001";
     }
 
-    public String getServices(String serviceId) throws SQLException {
+    public String getServices(String serviceId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select description from service where serviceId = ?", serviceId);
 
         StringBuilder services = new StringBuilder();
@@ -53,25 +53,25 @@ public class ServiceDAOImpl {
         return services.toString();
     }
 
-    public boolean saveService(ServiceDTO serviceDTO) throws SQLException {
+    public boolean save(Service service) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "insert into service values (?,?,?)",
-                serviceDTO.getServiceId(),
-                serviceDTO.getDescription(),
-                serviceDTO.getPrice()
+                service.getServiceId(),
+                service.getDescription(),
+                service.getPrice()
         );
     }
 
-    public boolean updateService(ServiceDTO serviceDTO) throws SQLException {
+    public boolean update(Service service) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "update service set description=?,price=? where serviceId=?",
-                serviceDTO.getDescription(),
-                serviceDTO.getPrice(),
-                serviceDTO.getServiceId()
+                service.getDescription(),
+                service.getPrice(),
+                service.getServiceId()
         );
     }
 
-    public boolean deleteService(String serviceId) throws SQLException {
+    public boolean delete(String serviceId) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "delete from service where serviceId = ?",
                 serviceId

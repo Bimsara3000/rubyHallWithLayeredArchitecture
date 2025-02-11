@@ -8,9 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.PriceFlucDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.PriceFlucTM;
-import lk.ijse.gdse71.projectrubyhall.model.PriceFlucModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.PriceFlucBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.PriceFlucDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.PriceFlucTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PriceFlucViewController implements Initializable {
+    PriceFlucBO priceFlucBO = (PriceFlucBO) BOFactory.getInstance(BOFactory.BOType.PRICE_FLUC);
 
     @FXML
     private Button btnDelete;
@@ -62,8 +64,6 @@ public class PriceFlucViewController implements Initializable {
     @FXML
     private TextField txtSDate;
 
-    PriceFlucModel priceFlucModel = new PriceFlucModel();
-
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
         PriceFlucTM priceFlucTM = tblPriceFluc.getSelectionModel().getSelectedItem();
@@ -79,7 +79,7 @@ public class PriceFlucViewController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = priceFlucModel.deletePriceFluc(priceFlucTM.getPriceFlucId());
+                boolean isDeleted = priceFlucBO.delete(priceFlucTM.getPriceFlucId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The price fluctuation is deleted!").show();
                     loadTable();
@@ -89,6 +89,8 @@ public class PriceFlucViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -138,7 +140,7 @@ public class PriceFlucViewController implements Initializable {
                         Integer.parseInt(percentage)
                 );
 
-                boolean isSaved = priceFlucModel.savePriceFluctuation(priceFlucDTO);
+                boolean isSaved = priceFlucBO.save(priceFlucDTO);
 
                 if (isSaved) {
                     refresh();
@@ -149,6 +151,8 @@ public class PriceFlucViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -205,7 +209,7 @@ public class PriceFlucViewController implements Initializable {
                         Integer.parseInt(percentage)
                 );
 
-                boolean isSaved = priceFlucModel.updatePriceFluctuation(priceFlucDTO);
+                boolean isSaved = priceFlucBO.update(priceFlucDTO);
 
                 if (isSaved) {
                     refresh();
@@ -216,6 +220,8 @@ public class PriceFlucViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -241,17 +247,19 @@ public class PriceFlucViewController implements Initializable {
 
     public void loadNextPriceFlucId() {
         try {
-            String nextPriceFlucId = priceFlucModel.getNextPriceFlucId();
+            String nextPriceFlucId = priceFlucBO.getNextId();
             lblPriceFlucId.setText(nextPriceFlucId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadTable() {
         try {
-            ArrayList<PriceFlucDTO> priceFlucDTOS = priceFlucModel.getAllPriceFluctuations();
+            ArrayList<PriceFlucDTO> priceFlucDTOS = priceFlucBO.getAll();
 
             ObservableList<PriceFlucTM> priceFlucTMS = FXCollections.observableArrayList();
 
@@ -270,6 +278,8 @@ public class PriceFlucViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
