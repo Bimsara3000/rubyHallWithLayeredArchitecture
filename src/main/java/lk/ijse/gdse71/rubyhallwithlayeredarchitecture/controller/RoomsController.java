@@ -16,13 +16,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import lk.ijse.gdse71.projectrubyhall.db.DBConnection;
-import lk.ijse.gdse71.projectrubyhall.dto.RoomDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.RoomTM;
-import lk.ijse.gdse71.projectrubyhall.model.FloorModel;
-import lk.ijse.gdse71.projectrubyhall.model.RoomFacilityModel;
-import lk.ijse.gdse71.projectrubyhall.model.RoomModel;
-import lk.ijse.gdse71.projectrubyhall.model.RoomTypeModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.FloorBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.RoomBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.RoomFacilityBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.RoomTypeBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.db.DBConnection;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.RoomDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.RoomTM;
 
 import java.io.IOException;
 import java.net.URL;
@@ -61,6 +62,11 @@ public class RoomsController implements Initializable {
     @FXML
     private TableView<RoomTM> tblRoom;
 
+    RoomTypeBO roomTypeBO = (RoomTypeBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM_TYPE);
+    FloorBO floorBO = (FloorBO) BOFactory.getInstance().getBO(BOFactory.BOType.FLOOR);
+    RoomBO roomBO = (RoomBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM);
+    RoomFacilityBO roomFacilityBO = (RoomFacilityBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM_FACILITY);
+
     Connection connection = DBConnection.getInstance().getConnection();
 
     public RoomsController() throws SQLException {
@@ -69,7 +75,7 @@ public class RoomsController implements Initializable {
     @FXML
     void OnClickAdd(ActionEvent event) {
         try {
-            AnchorPane load = FXMLLoader.load(getClass().getResource("/view/AddRoomView.fxml"));
+            AnchorPane load = FXMLLoader.load(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/AddRoomView.fxml"));
 
             Stage stage = new Stage();
             stage.setScene(new Scene(load));
@@ -105,20 +111,20 @@ public class RoomsController implements Initializable {
 
             try {
                 connection.setAutoCommit(false);
-                boolean isDeleted = roomModel.deleteRoom(room.getRoomId());
+                boolean isDeleted = roomBO.deleteRoom(room.getRoomId(),connection);
                 if (isDeleted) {
                     if (!room.getFacilities().isEmpty()) {
-                        boolean isFacilitiesDeleted = roomFacilityModel.deleteFacilities(room.getRoomId());
+                        boolean isFacilitiesDeleted = roomFacilityBO.deleteFacilities(room.getRoomId(),connection);
 
                         if (isFacilitiesDeleted) {
+
+                        } else {
+//                            new Alert(Alert.AlertType.ERROR, "Fail to delete this room!").show();
+//                            System.out.println("Facilities failed to delete!");
+//                            System.out.println("isFacilitiesDeleted: "+isFacilitiesDeleted);
+//                            loadTable();
                             connection.commit();
                             new Alert(Alert.AlertType.INFORMATION, "The room is deleted!").show();
-                            System.out.println("isFacilitiesDeleted: "+isFacilitiesDeleted);
-                            loadTable();
-                        } else {
-                            new Alert(Alert.AlertType.ERROR, "Fail to delete this room!").show();
-                            System.out.println("Facilities failed to delete!");
-                            System.out.println("isFacilitiesDeleted: "+isFacilitiesDeleted);
                             loadTable();
                         }
                     } else {
@@ -128,12 +134,13 @@ public class RoomsController implements Initializable {
                     }
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the room!").show();
-                    System.out.println("Room655 failed to delete!");
                 }
             } catch (SQLException e) {
                 connection.rollback();
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             } finally {
                 connection.setAutoCommit(true);
             }
@@ -150,7 +157,7 @@ public class RoomsController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UpdateRoomView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/UpdateRoomView.fxml"));
             Parent load = loader.load();
 
             UpdateRoomViewController updateRoomViewController = loader.getController();
@@ -180,24 +187,19 @@ public class RoomsController implements Initializable {
         btnDelete.setDisable(false);
     }
 
-    RoomModel roomModel = new RoomModel();
-    RoomFacilityModel roomFacilityModel = new RoomFacilityModel();
-    RoomTypeModel roomTypeModel = new RoomTypeModel();
-    FloorModel floorModel = new FloorModel();
-
     public void loadTable() {
         try {
-            ArrayList<RoomDTO> roomDTOS = roomModel.getAllRooms();
+            ArrayList<RoomDTO> roomDTOS = roomBO.getAll();
 
             ObservableList<RoomTM> roomTMS = FXCollections.observableArrayList();
 
             for (RoomDTO roomDTO : roomDTOS) {
                 RoomTM roomTM = new RoomTM(
                         roomDTO.getRoomId(),
-                        roomTypeModel.getRoomType(roomDTO.getRoomTypeId()),
-                        floorModel.getFloor(roomDTO.getFloorId()),
+                        roomTypeBO.getName(roomDTO.getRoomTypeId()),
+                        floorBO.getName(roomDTO.getFloorId()),
                         roomDTO.getState(),
-                        roomFacilityModel.getFacilities(roomDTO.getRoomId())
+                        roomFacilityBO.getFacilities(roomDTO.getRoomId())
                 );
                 roomTMS.add(roomTM);
             }
@@ -206,6 +208,8 @@ public class RoomsController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

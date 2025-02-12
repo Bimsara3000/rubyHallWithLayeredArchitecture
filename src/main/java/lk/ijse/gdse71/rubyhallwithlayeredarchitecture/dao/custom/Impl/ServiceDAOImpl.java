@@ -1,13 +1,14 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.ServiceDAO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Service;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ServiceDAOImpl {
+public class ServiceDAOImpl implements ServiceDAO {
     public ArrayList<Service> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from service");
 
@@ -76,5 +77,10 @@ public class ServiceDAOImpl {
                 "delete from service where serviceId = ?",
                 serviceId
         );
+    }
+
+    @Override
+    public String getName(String id) throws SQLException, ClassNotFoundException {
+        return "";
     }
 }

@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class GuestsController implements Initializable {
-    GuestBO guestBO = (GuestBO) BOFactory.getInstance(BOFactory.BOType.USER);
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance().getBO(BOFactory.BOType.GUEST);
 
     @FXML
     private Button btnAdd;
@@ -58,7 +58,7 @@ public class GuestsController implements Initializable {
     @FXML
     void onClickAdd(ActionEvent event) {
         try {
-            AnchorPane load = FXMLLoader.load(getClass().getResource("/view/AddGuestView.fxml"));
+            AnchorPane load = FXMLLoader.load(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/AddGuestView.fxml"));
 
             Stage stage = new Stage();
             stage.setScene(new Scene(load));
@@ -125,7 +125,7 @@ public class GuestsController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/UpdateGuestView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/UpdateGuestView.fxml"));
             Parent load = loader.load();
 
             UpdateGuestViewController updateGuestViewController = loader.getController();

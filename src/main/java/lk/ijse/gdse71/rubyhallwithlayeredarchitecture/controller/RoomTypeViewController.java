@@ -8,9 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.RoomTypeDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.RoomTypeTM;
-import lk.ijse.gdse71.projectrubyhall.model.RoomTypeModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.RoomTypeBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.RoomTypeDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.RoomTypeTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -49,7 +50,7 @@ public class RoomTypeViewController implements Initializable {
     @FXML
     private TextField txtPrice;
 
-    RoomTypeModel roomTypeModel = new RoomTypeModel();
+    RoomTypeBO roomTypeBO = (RoomTypeBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM_TYPE);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -78,17 +79,19 @@ public class RoomTypeViewController implements Initializable {
 
     public void loadNextRoomTypeId() {
         try {
-            String nextRoomTypeId = roomTypeModel.getNextRoomTypeId();
+            String nextRoomTypeId = roomTypeBO.getNextId();
             lblRoomTypeId.setText(nextRoomTypeId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadTable() {
         try {
-            ArrayList<RoomTypeDTO> roomTypeDTOS = roomTypeModel.getAllRoomTypes();
+            ArrayList<RoomTypeDTO> roomTypeDTOS = roomTypeBO.getAll();
 
             ObservableList<RoomTypeTM> roomTypeTMS = FXCollections.observableArrayList();
 
@@ -105,6 +108,8 @@ public class RoomTypeViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

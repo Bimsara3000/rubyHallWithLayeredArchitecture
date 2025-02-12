@@ -10,7 +10,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.ServiceBO;
-import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.DAOFactory;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.ServiceDTO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.ServiceTM;
 
@@ -52,7 +51,7 @@ public class ServiceViewController implements Initializable {
     @FXML
     private TextField txtPrice;
 
-    ServiceBO serviceBO = (ServiceBO) BOFactory.getInstance(BOFactory.BOType.SERVICE);
+    ServiceBO serviceBO = (ServiceBO) BOFactory.getInstance().getBO(BOFactory.BOType.SERVICE);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {

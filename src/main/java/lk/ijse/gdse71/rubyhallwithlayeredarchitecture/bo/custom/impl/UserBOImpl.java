@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class UserBOImpl implements UserBO {
-    UserDAO userDAO = (UserDAO) DAOFactory.getInstance(DAOFactory.DAOType.USER);
+    UserDAO userDAO = (UserDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOType.USER);
 
     public UserDTO checkDetails(String uId) throws SQLException, ClassNotFoundException {
         User user = userDAO.checkDetails(uId);

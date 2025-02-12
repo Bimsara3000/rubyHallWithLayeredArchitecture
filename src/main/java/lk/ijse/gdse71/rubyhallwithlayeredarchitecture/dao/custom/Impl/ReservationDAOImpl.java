@@ -1,21 +1,21 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.ReservationDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.ReservationDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Reservation;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ReservationDAOImpl {
-
-    public ArrayList<ReservationDTO> getAllReservations() throws SQLException {
+public class ReservationDAOImpl implements ReservationDAO {
+    public ArrayList<Reservation> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from reservation");
 
-        ArrayList<ReservationDTO> reservations = new ArrayList<>();
+        ArrayList<Reservation> reservations = new ArrayList<>();
 
         while (resultSet.next()) {
-            ReservationDTO reservation = new ReservationDTO(
+            Reservation reservation = new Reservation(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -29,7 +29,7 @@ public class ReservationDAOImpl {
         return reservations;
     }
 
-    public String getNextReservationId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select reservationId from reservation order by reservationId desc limit 1");
 
         if (rst.next()) {
@@ -42,7 +42,27 @@ public class ReservationDAOImpl {
         return "RE001";
     }
 
-    public String getGuestId(String reservationId) throws SQLException {
+    @Override
+    public boolean save(Reservation dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean update(Reservation dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public String getName(String id) throws SQLException, ClassNotFoundException {
+        return "";
+    }
+
+    public String getGuestId(String reservationId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select guestId from reservation where reservationId = ?", reservationId);
 
         if (resultSet.next()){

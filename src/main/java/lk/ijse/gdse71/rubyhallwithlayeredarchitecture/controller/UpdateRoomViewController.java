@@ -11,11 +11,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import lk.ijse.gdse71.projectrubyhall.db.DBConnection;
-import lk.ijse.gdse71.projectrubyhall.dto.RoomDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.RoomFacilityDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.RoomTM;
-import lk.ijse.gdse71.projectrubyhall.model.*;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.*;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.db.DBConnection;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.RoomDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.RoomFacilityDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.RoomTM;
 import lombok.Setter;
 
 import java.net.URL;
@@ -57,12 +58,13 @@ public class UpdateRoomViewController implements Initializable {
     @Setter
     RoomTM room;
 
+    RoomTypeBO roomTypeBO = (RoomTypeBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM_TYPE);
+    FloorBO floorBO = (FloorBO) BOFactory.getInstance().getBO(BOFactory.BOType.FLOOR);
+    RoomBO roomBO = (RoomBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM);
+    RoomFacilityBO roomFacilityBO = (RoomFacilityBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM_FACILITY);
+    FacilityBO facilityBO = (FacilityBO) BOFactory.getInstance().getBO(BOFactory.BOType.FACILITY);
+
     Connection connection = DBConnection.getInstance().getConnection();
-    RoomTypeModel roomTypeModel = new RoomTypeModel();
-    FloorModel floorModel = new FloorModel();
-    FacilityModel facilityModel = new FacilityModel();
-    RoomModel roomModel = new RoomModel();
-    RoomFacilityModel roomFacilityModel = new RoomFacilityModel();
 
     public UpdateRoomViewController() throws SQLException {
     }
@@ -94,12 +96,12 @@ public class UpdateRoomViewController implements Initializable {
             if (roomType != null && floor != null && state != null) {
                 RoomDTO roomDTO = new RoomDTO(
                         lblRoomId.getText(),
-                        roomTypeModel.getRoomTypeId(roomType),
-                        floorModel.getFloorId(floor),
+                        roomTypeBO.getRoomTypeId(roomType),
+                        floorBO.getFloorId(floor),
                         state
                 );
 
-                boolean isSaved = roomModel.updateRoom(roomDTO);
+                boolean isSaved = roomBO.updateRoom(roomDTO,connection);
 
                 if (isSaved) {
                     boolean isDeleted;
@@ -107,7 +109,7 @@ public class UpdateRoomViewController implements Initializable {
                     if (room.getFacilities().isEmpty()) {
                         isDeleted = true;
                     } else {
-                        isDeleted = roomFacilityModel.deleteFacilities(lblRoomId.getText());
+                        isDeleted = roomFacilityBO.deleteFacilities(lblRoomId.getText(),connection);
                     }
 
                     if (isDeleted) {
@@ -121,13 +123,13 @@ public class UpdateRoomViewController implements Initializable {
                                 if (checkBoxes[i].isSelected()) {
                                     RoomFacilityDTO roomFacilityDTO = new RoomFacilityDTO(
                                             lblRoomId.getText(),
-                                            facilityModel.getFacilityId(facility[i])
+                                            facilityBO.getFacilityId(facility[i])
                                     );
                                     roomFacilities.add(roomFacilityDTO);
                                 }
                             }
 
-                            boolean facilitySaved = roomFacilityModel.save(roomFacilities);
+                            boolean facilitySaved = roomFacilityBO.saveFacilities(roomFacilities,connection);
 
                             if (facilitySaved) {
                                 connection.commit();
@@ -156,6 +158,8 @@ public class UpdateRoomViewController implements Initializable {
             connection.rollback();
             new Alert(Alert.AlertType.ERROR, "Database error!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         } finally {
             connection.setAutoCommit(true);
         }
@@ -167,17 +171,25 @@ public class UpdateRoomViewController implements Initializable {
     }
 
     private void loadFloors() throws SQLException {
-        ArrayList<String> roomTypes = roomTypeModel.getRoomTypes();
-        ObservableList<String> observableList = FXCollections.observableArrayList();
-        observableList.addAll(roomTypes);
-        cmbRoomType.setItems(observableList);
+        try {
+            ArrayList<String> roomTypes = roomTypeBO.getRoomTypes();
+            ObservableList<String> observableList = FXCollections.observableArrayList();
+            observableList.addAll(roomTypes);
+            cmbRoomType.setItems(observableList);
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
+        }
     }
 
     private void loadRoomTypes() throws SQLException {
-        ArrayList<String> floors = floorModel.getFloors();
-        ObservableList<String> observableList = FXCollections.observableArrayList();
-        observableList.addAll(floors);
-        cmbFloor.setItems(observableList);
+        try {
+            ArrayList<String> floors = floorBO.getFloors();
+            ObservableList<String> observableList = FXCollections.observableArrayList();
+            observableList.addAll(floors);
+            cmbFloor.setItems(observableList);
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
+        }
     }
 
     private void loadStates() {

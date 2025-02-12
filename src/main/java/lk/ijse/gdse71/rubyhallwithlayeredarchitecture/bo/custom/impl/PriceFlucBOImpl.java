@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PriceFlucBOImpl implements PriceFlucBO {
-    PriceFlucDAO priceFlucDAO = (PriceFlucDAO) DAOFactory.getInstance(DAOFactory.DAOType.PRICE_FLUC);
+    PriceFlucDAO priceFlucDAO = (PriceFlucDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOType.PRICE_FLUC);
 
     public String getNextId() throws SQLException, ClassNotFoundException {
         return priceFlucDAO.getNextId();

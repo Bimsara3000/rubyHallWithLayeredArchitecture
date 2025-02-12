@@ -11,6 +11,9 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.ReservationBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.UserBO;
 
 import java.io.IOException;
 import java.net.URL;
@@ -80,7 +83,7 @@ public class AddReservationViewController implements Initializable {
         }
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/ChooseRoom.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/ChooseRoom.fxml"));
             Parent load = loader.load();
 
             ChooseRoomController chooseRoomController = loader.getController();
@@ -111,16 +114,18 @@ public class AddReservationViewController implements Initializable {
 
     }
 
-    ReservationModel reservationModel = new ReservationModel();
-    UserModel userModel = new UserModel();
+    ReservationBO reservationBO = (ReservationBO) BOFactory.getInstance().getBO(BOFactory.BOType.RESERVATION);
+    UserBO userBO = (UserBO) BOFactory.getInstance().getBO(BOFactory.BOType.USER);
 
     public void loadNextResId() {
         try {
-            String nextResId = reservationModel.getNextReservationId();
+            String nextResId = reservationBO.getNextId();
             lblResId.setText(nextResId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
@@ -128,10 +133,12 @@ public class AddReservationViewController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         loadNextResId();
         try {
-            lblUserName.setText(userModel.getUserName(LoginController.userId));
+            lblUserName.setText(userBO.getName(LoginController.userId));
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 }

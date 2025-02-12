@@ -1,14 +1,15 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.FloorDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.FloorDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Floor;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class FloorDAOImpl {
-    public String getFloor(String floorId) throws SQLException {
+public class FloorDAOImpl implements FloorDAO {
+    public String getName(String floorId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select description from floor where floorId = ?", floorId);
 
         if (resultSet.next()){
@@ -17,7 +18,7 @@ public class FloorDAOImpl {
         return null;
     }
 
-    public String getNextFloorId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select floorId from floor order by floorId desc limit 1");
 
         if (rst.next()) {
@@ -30,22 +31,22 @@ public class FloorDAOImpl {
         return "F001";
     }
 
-    public ArrayList<FloorDTO> getAllFloors() throws SQLException {
+    public ArrayList<Floor> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from floor");
 
-        ArrayList<FloorDTO> floorDTOS = new ArrayList<>();
+        ArrayList<Floor> floors = new ArrayList<>();
 
         while (resultSet.next()) {
-            FloorDTO floorDTO = new FloorDTO(
+            Floor floor = new Floor(
                     resultSet.getString(1),
                     resultSet.getString(2)
             );
-            floorDTOS.add(floorDTO);
+            floors.add(floor);
         }
-        return floorDTOS;
+        return floors;
     }
 
-    public ArrayList<String> getFloors() throws SQLException {
+    public ArrayList<String> getFloors() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select description from floor");
 
         ArrayList<String> floors = new ArrayList<>();
@@ -56,7 +57,7 @@ public class FloorDAOImpl {
         return floors;
     }
 
-    public String getFloorId(String floor) throws SQLException {
+    public String getFloorId(String floor) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select floorId from floor where description = ?", floor);
 
         if (resultSet.next()){
@@ -65,23 +66,23 @@ public class FloorDAOImpl {
         return null;
     }
 
-    public boolean saveFloor(FloorDTO floorDTO) throws SQLException {
+    public boolean save(Floor floor) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "insert into floor values (?,?)",
-                floorDTO.getFloorId(),
-                floorDTO.getDescription()
+                floor.getFloorId(),
+                floor.getDescription()
         );
     }
 
-    public boolean updateFloor(FloorDTO floorDTO) throws SQLException {
+    public boolean update(Floor floor) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "update floor set description=? where floorId=?",
-                floorDTO.getDescription(),
-                floorDTO.getFloorId()
+                floor.getDescription(),
+                floor.getFloorId()
         );
     }
 
-    public boolean deletePaymentType(String floorId) throws SQLException {
+    public boolean delete(String floorId) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "delete from floor where floorId = ?",
                 floorId

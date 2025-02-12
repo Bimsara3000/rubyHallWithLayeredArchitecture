@@ -8,9 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.PaymentTypeDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.PaymentTypeTM;
-import lk.ijse.gdse71.projectrubyhall.model.PaymentTypeModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.PaymentTypeBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.PaymentTypeDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.PaymentTypeTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -44,7 +45,7 @@ public class PaymentTypeViewController implements Initializable {
     @FXML
     private TextField txtDesc;
 
-    PaymentTypeModel paymentTypeModel = new PaymentTypeModel();
+    PaymentTypeBO paymentTypeBO = (PaymentTypeBO) BOFactory.getInstance().getBO(BOFactory.BOType.PAYMENT_TYPE);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -61,7 +62,7 @@ public class PaymentTypeViewController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = paymentTypeModel.deletePaymentType(paymentTypeTM.getPaymentTypeId());
+                boolean isDeleted = paymentTypeBO.delete(paymentTypeTM.getPaymentTypeId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The payment type is deleted!").show();
                     loadTable();
@@ -71,6 +72,8 @@ public class PaymentTypeViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -92,7 +95,7 @@ public class PaymentTypeViewController implements Initializable {
                         desc
                 );
 
-                boolean isSaved = paymentTypeModel.savePaymentType(paymentTypeDTO);
+                boolean isSaved = paymentTypeBO.save(paymentTypeDTO);
 
                 if (isSaved) {
                     refresh();
@@ -103,6 +106,8 @@ public class PaymentTypeViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -131,7 +136,7 @@ public class PaymentTypeViewController implements Initializable {
                         desc
                 );
 
-                boolean isSaved = paymentTypeModel.updatePaymentType(paymentTypeDTO);
+                boolean isSaved = paymentTypeBO.update(paymentTypeDTO);
 
                 if (isSaved) {
                     refresh();
@@ -142,6 +147,8 @@ public class PaymentTypeViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -164,17 +171,19 @@ public class PaymentTypeViewController implements Initializable {
 
     public void loadNextPaymentTypeId() {
         try {
-            String nextPaymentTypeId = paymentTypeModel.getNextPaymentTypeId();
+            String nextPaymentTypeId = paymentTypeBO.getNextId();
             lblPaymentTypeId.setText(nextPaymentTypeId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadTable() {
         try {
-            ArrayList<PaymentTypeDTO> paymentTypeDTOS = paymentTypeModel.getAllPaymentTypes();
+            ArrayList<PaymentTypeDTO> paymentTypeDTOS = paymentTypeBO.getAll();
 
             ObservableList<PaymentTypeTM> paymentTypeTMS = FXCollections.observableArrayList();
 
@@ -190,6 +199,8 @@ public class PaymentTypeViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

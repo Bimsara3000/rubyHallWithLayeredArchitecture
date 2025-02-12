@@ -9,6 +9,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.JobRoleBO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.UserBO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.UserDTO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.UserTM;
@@ -63,7 +64,8 @@ public class UserViewController implements Initializable {
     @FXML
     private TextField txtPassword;
 
-    UserBO userBO = (UserBO) BOFactory.getInstance(BOFactory.BOType.USER);
+    UserBO userBO = (UserBO) BOFactory.getInstance().getBO(BOFactory.BOType.USER);
+    JobRoleBO jobRoleBO = (JobRoleBO) BOFactory.getInstance().getBO(BOFactory.BOType.JOB_ROLE);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -128,7 +130,7 @@ public class UserViewController implements Initializable {
             try {
                 UserDTO userDTO = new UserDTO(
                         lblUserId.getText(),
-                        jobRoleModel.getJobRoleId(cmbJobRole.getValue()),
+                        jobRoleBO.getJobRoleId(cmbJobRole.getValue()),
                         name,
                         email,
                         password
@@ -190,7 +192,7 @@ public class UserViewController implements Initializable {
             try {
                 UserDTO userDTO = new UserDTO(
                         lblUserId.getText(),
-                        jobRoleModel.getJobRoleId(cmbJobRole.getValue()),
+                        jobRoleBO.getJobRoleId(cmbJobRole.getValue()),
                         name,
                         email,
                         password
@@ -241,7 +243,7 @@ public class UserViewController implements Initializable {
             for (UserDTO userDTO : userDTOS) {
                 UserTM userTM = new UserTM(
                         userDTO.getUserId(),
-                        jobRoleModel.getJobRoleName(userDTO.getJobRoleId()),
+                        jobRoleBO.getName(userDTO.getJobRoleId()),
                         userDTO.getName(),
                         userDTO.getEmail(),
                         userDTO.getPassword()
@@ -271,10 +273,14 @@ public class UserViewController implements Initializable {
     }
 
     private void loadJobRoles() throws SQLException {
-        ArrayList<String> jobRoles = jobRoleModel.getJobRoles();
-        ObservableList<String> observableList = FXCollections.observableArrayList();
-        observableList.addAll(jobRoles);
-        cmbJobRole.setItems(observableList);
+        try {
+            ArrayList<String> jobRoles = jobRoleBO.getJobRoles();
+            ObservableList<String> observableList = FXCollections.observableArrayList();
+            observableList.addAll(jobRoles);
+            cmbJobRole.setItems(observableList);
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
+        }
     }
 
     public void refresh() {

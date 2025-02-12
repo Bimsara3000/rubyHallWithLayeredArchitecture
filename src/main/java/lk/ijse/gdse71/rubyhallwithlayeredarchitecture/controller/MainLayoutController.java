@@ -47,39 +47,39 @@ public class MainLayoutController implements Initializable {
 
     @FXML
     void clickBtnGuests(ActionEvent event) {
-        navigateTo("/view/Guests.fxml");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Guests.fxml");
     }
 
     @FXML
     void clickBtnReports(ActionEvent event) {
-        navigateTo("/view/Reports.fxml");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Reports.fxml");
     }
 
     @FXML
     void clickBtnReservations(ActionEvent event) {
-        navigateTo("/view/Reservations.fxml");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Reservations.fxml");
     }
 
     @FXML
     void clickBtnRooms(ActionEvent event) {
-        navigateTo("/view/Rooms.fxml");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Rooms.fxml");
     }
 
     @FXML
     void clickBtnUsers(ActionEvent event) {
-        navigateTo("/view/Advanced.fxml");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Advanced.fxml");
     }
 
     @FXML
     void clickBtnPayments(ActionEvent event) {
-        navigateTo("/view/Payments.fxml");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Payments.fxml");
     }
 
     @FXML
     void onClickLogout(ActionEvent event) {
         try {
             anchMainLayout.getChildren().clear();
-            AnchorPane load = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+            AnchorPane load = FXMLLoader.load(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Login.fxml"));
 
             anchMainLayout.getChildren().add(load);
         } catch (IOException e) {

@@ -18,9 +18,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import lk.ijse.gdse71.projectrubyhall.dto.ReservationDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.ReservationTM;
-import lk.ijse.gdse71.projectrubyhall.model.*;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.*;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.ReservationDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.ReservationTM;
 
 import java.io.IOException;
 import java.net.URL;
@@ -76,7 +77,7 @@ public class ReservationsController implements Initializable {
 
     @FXML
     void clickAddReservation(ActionEvent event) {
-        navigateTo("/view/AddReservationView.fxml", "Add Reservation", "icons8-add-48.png");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/AddReservationView.fxml", "Add Reservation", "icons8-add-48.png");
     }
 
     @FXML
@@ -90,29 +91,29 @@ public class ReservationsController implements Initializable {
         btnDelete.setDisable(false);
     }
 
-    ReservationModel reservationModel = new ReservationModel();
-    GuestModel guestModel = new GuestModel();
-    PackageModel packageModel = new PackageModel();
-    ReservationRoomModel reservationRoomModel = new ReservationRoomModel();
-    ServiceModel serviceModel = new ServiceModel();
-    ReservationServiceModel reservationServiceModel = new ReservationServiceModel();
+    ReservationBO reservationBO = (ReservationBO) BOFactory.getInstance().getBO(BOFactory.BOType.RESERVATION);
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance().getBO(BOFactory.BOType.GUEST);
+    PackageBO packageBO = (PackageBO) BOFactory.getInstance().getBO(BOFactory.BOType.PACKAGE);
+    ReservationRoomBO reservationRoomBO = (ReservationRoomBO) BOFactory.getInstance().getBO(BOFactory.BOType.RESERVATION_ROOM);
+    ServiceBO serviceBO = (ServiceBO) BOFactory.getInstance().getBO(BOFactory.BOType.SERVICE);
+    ReservationServiceBO reservationServiceBO = (ReservationServiceBO) BOFactory.getInstance().getBO(BOFactory.BOType.RESERVATION_SERVICE);
 
     public void loadTable() {
         try {
-            ArrayList<ReservationDTO> reservationDTOS = reservationModel.getAllReservations();
+            ArrayList<ReservationDTO> reservationDTOS = reservationBO.getAll();
 
             ObservableList<ReservationTM> reservationTMS = FXCollections.observableArrayList();
 
             for (ReservationDTO reservationDTO : reservationDTOS) {
                 ReservationTM reservationTM = new ReservationTM(
                         reservationDTO.getReservationId(),
-                        guestModel.getGuestName(reservationDTO.getGuestId()),
-                        packageModel.getPackageName(reservationDTO.getPackageId()),
-                        serviceModel.getServices(reservationServiceModel.getServiceId(reservationDTO.getReservationId())),
-                        reservationRoomModel.getRoomIds(reservationDTO.getReservationId()),
+                        guestBO.getName(reservationDTO.getGuestId()),
+                        packageBO.getName(reservationDTO.getPackageId()),
+                        serviceBO.getServices(reservationServiceBO.getServiceId(reservationDTO.getReservationId())),
+                        reservationRoomBO.getRoomIds(reservationDTO.getReservationId()),
                         reservationDTO.getGuestCount(),
                         reservationDTO.getDate(),
-                        reservationRoomModel.getResDate(reservationDTO.getReservationId()),
+                        reservationRoomBO.getResDate(reservationDTO.getReservationId()),
                         reservationDTO.getDescription()
                 );
                 reservationTMS.add(reservationTM);
@@ -122,6 +123,8 @@ public class ReservationsController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

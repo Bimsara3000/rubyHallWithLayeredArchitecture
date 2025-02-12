@@ -12,14 +12,14 @@ import java.io.IOException;
 public class AppInitializer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/view/LoadingScreenView.fxml"))));
+        stage.setScene(new Scene(FXMLLoader.load(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/LoadingScreenView.fxml"))));
         stage.setTitle("Welcome");
         stage.show();
 
         Task<Scene> loadingTask = new Task<>() {
             @Override
             protected Scene call() throws Exception {
-                FXMLLoader fxmlLoader = new FXMLLoader(AppInitializer.class.getResource("/view/Login.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(AppInitializer.class.getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Login.fxml"));
                 return new Scene(fxmlLoader.load());
             }
         };

@@ -8,9 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.FloorDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.FloorTM;
-import lk.ijse.gdse71.projectrubyhall.model.FloorModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.FloorBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.FloorDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.FloorTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -44,7 +45,7 @@ public class FloorViewController implements Initializable {
     @FXML
     private TextField txtDesc;
 
-    FloorModel floorModel = new FloorModel();
+    FloorBO floorBO = (FloorBO) BOFactory.getInstance().getBO(BOFactory.BOType.FLOOR);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -61,7 +62,7 @@ public class FloorViewController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = floorModel.deletePaymentType(floorTM.getFloorId());
+                boolean isDeleted = floorBO.delete(floorTM.getFloorId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The floor is deleted!").show();
                     loadTable();
@@ -71,6 +72,8 @@ public class FloorViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -92,7 +95,7 @@ public class FloorViewController implements Initializable {
                         desc
                 );
 
-                boolean isSaved = floorModel.saveFloor(floorDTO);
+                boolean isSaved = floorBO.save(floorDTO);
 
                 if (isSaved) {
                     refresh();
@@ -103,6 +106,8 @@ public class FloorViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -131,7 +136,7 @@ public class FloorViewController implements Initializable {
                         desc
                 );
 
-                boolean isSaved = floorModel.updateFloor(floorDTO);
+                boolean isSaved = floorBO.update(floorDTO);
 
                 if (isSaved) {
                     refresh();
@@ -142,6 +147,8 @@ public class FloorViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -164,17 +171,19 @@ public class FloorViewController implements Initializable {
 
     public void loadNextFloorId() {
         try {
-            String nextFloorId = floorModel.getNextFloorId();
+            String nextFloorId = floorBO.getNextId();
             lblFloorId.setText(nextFloorId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadTable() {
         try {
-            ArrayList<FloorDTO> floorDTOS = floorModel.getAllFloors();
+            ArrayList<FloorDTO> floorDTOS = floorBO.getAll();
 
             ObservableList<FloorTM> floorTMS = FXCollections.observableArrayList();
 
@@ -190,6 +199,8 @@ public class FloorViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class PackageBOImpl implements PackageBO {
-    PackageDAO packageDAO = (PackageDAO) DAOFactory.getInstance(DAOFactory.DAOType.PACKAGE);
+    PackageDAO packageDAO = (PackageDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOType.PACKAGE);
 
     public String getName(String packageId) throws SQLException, ClassNotFoundException {
         return packageDAO.getName(packageId);

@@ -51,7 +51,7 @@ public class FacilityViewController implements Initializable {
     @FXML
     private TextField txtPrice;
 
-    FacilityBO facilityBO = (FacilityBO) BOFactory.getInstance(BOFactory.BOType.FACILITY);
+    FacilityBO facilityBO = (FacilityBO) BOFactory.getInstance().getBO(BOFactory.BOType.FACILITY);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {

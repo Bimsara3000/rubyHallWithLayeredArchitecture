@@ -8,9 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.PackageDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.PackageTM;
-import lk.ijse.gdse71.projectrubyhall.model.PackageModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.PackageBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.PackageDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.PackageTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -68,7 +69,7 @@ public class PackageViewController implements Initializable {
     @FXML
     private TextField txtValidity;
 
-    PackageModel packageModel = new PackageModel();
+    PackageBO packageBO = (PackageBO) BOFactory.getInstance().getBO(BOFactory.BOType.PACKAGE);
 
     @FXML
     void btnDeleteOnAction(ActionEvent event) {
@@ -85,7 +86,7 @@ public class PackageViewController implements Initializable {
         if (optionalButtonType.isPresent() && optionalButtonType.get() == ButtonType.YES) {
 
             try {
-                boolean isDeleted = packageModel.deletePackage(packageTM.getPackageId());
+                boolean isDeleted = packageBO.delete(packageTM.getPackageId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The package is deleted!").show();
                     loadTable();
@@ -95,6 +96,8 @@ public class PackageViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "DB Error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -152,7 +155,7 @@ public class PackageViewController implements Initializable {
                         validity
                 );
 
-                boolean isSaved = packageModel.savePackage(packageDTO);
+                boolean isSaved = packageBO.save(packageDTO);
 
                 if (isSaved) {
                     refresh();
@@ -163,6 +166,8 @@ public class PackageViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -227,7 +232,7 @@ public class PackageViewController implements Initializable {
                         validity
                 );
 
-                boolean isSaved = packageModel.updatePackage(packageDTO);
+                boolean isSaved = packageBO.update(packageDTO);
 
                 if (isSaved) {
                     refresh();
@@ -238,6 +243,8 @@ public class PackageViewController implements Initializable {
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Database error!").show();
                 e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
             }
         }
     }
@@ -269,17 +276,19 @@ public class PackageViewController implements Initializable {
 
     public void loadNextPackageId() {
         try {
-            String nextPackageId = packageModel.getNextPackageId();
+            String nextPackageId = packageBO.getNextId();
             lblPackageId.setText(nextPackageId);
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadTable() {
         try {
-            ArrayList<PackageDTO> packageDTOS = packageModel.getAllPackages();
+            ArrayList<PackageDTO> packageDTOS = packageBO.getAll();
 
             ObservableList<PackageTM> packageTMS = FXCollections.observableArrayList();
 
@@ -299,6 +308,8 @@ public class PackageViewController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

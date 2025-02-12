@@ -19,7 +19,7 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 public class UpdateGuestViewController implements Initializable {
-    GuestBO guestBO = (GuestBO) BOFactory.getInstance(BOFactory.BOType.USER);
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance().getBO(BOFactory.BOType.GUEST);
 
     @FXML
     private Label lblGuestId;

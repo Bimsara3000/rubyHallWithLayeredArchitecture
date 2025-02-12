@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class FacilityBOImpl implements FacilityBO {
-    FacilityDAO facilityDAO = (FacilityDAO) DAOFactory.getInstance(DAOFactory.DAOType.FACILITY);
+    FacilityDAO facilityDAO = (FacilityDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOType.FACILITY);
 
     public String getName(String facilityId) throws SQLException, ClassNotFoundException {
         return facilityDAO.getName(facilityId);

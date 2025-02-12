@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class GuestBOImpl implements GuestBO {
-    GuestDAO guestDAO = (GuestDAO) DAOFactory.getInstance(DAOFactory.DAOType.ROOM).getDAO(DAOFactory.DAOType.GUEST);
+    GuestDAO guestDAO = (GuestDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOType.GUEST);
 
     public ArrayList<GuestDTO> getAll() throws SQLException, ClassNotFoundException {
         ArrayList<Guest> guests = guestDAO.getAll();

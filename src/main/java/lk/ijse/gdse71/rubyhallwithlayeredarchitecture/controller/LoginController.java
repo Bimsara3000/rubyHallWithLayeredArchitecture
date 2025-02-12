@@ -8,10 +8,11 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import lk.ijse.gdse71.projectrubyhall.dto.JobRoleDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.UserDTO;
-import lk.ijse.gdse71.projectrubyhall.model.JobRoleModel;
-import lk.ijse.gdse71.projectrubyhall.model.UserModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.JobRoleBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.UserBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.JobRoleDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.UserDTO;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,20 +42,30 @@ public class LoginController implements Initializable {
     @FXML
     private VBox vBoxLogin;
 
-    UserModel userModel = new UserModel();
-    JobRoleModel jobRoleModel = new JobRoleModel();
+    JobRoleBO jobRoleBO = (JobRoleBO) BOFactory.getInstance().getBO(BOFactory.BOType.JOB_ROLE);
+    UserBO userBO = (UserBO) BOFactory.getInstance().getBO(BOFactory.BOType.USER);
+
     public static String jobRole;
     public static String userId;
+
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        anchLogin.setTopAnchor(vBoxLogin, 0.0);
+        anchLogin.setBottomAnchor(vBoxLogin, 0.0);
+        anchLogin.setLeftAnchor(vBoxLogin, 0.0);
+        anchLogin.setRightAnchor(vBoxLogin, 0.0);
+    }
 
     @FXML
     void btnLogin(ActionEvent event) {
 
         try {
-            UserDTO details = userModel.checkDetails(txtUserID.getText());
+            UserDTO details = userBO.checkDetails(txtUserID.getText());
 
             if(details != null && details .getPassword().equals(txtPassword.getText())) {
 
-                JobRoleDTO role = jobRoleModel.getJobRole(details.getJobRoleId());
+                JobRoleDTO role = jobRoleBO.getJobRole(details.getJobRoleId());
 
                 if(role != null) {
                     jobRole = role.getName();
@@ -62,7 +73,7 @@ public class LoginController implements Initializable {
                 }
 
                 anchLogin.getChildren().clear();
-                AnchorPane load = FXMLLoader.load(getClass().getResource("/view/MainLayout.fxml"));
+                AnchorPane load = FXMLLoader.load(getClass().getResource("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/MainLayout.fxml"));
 
                 anchLogin.getChildren().add(load);
             } else {
@@ -74,14 +85,8 @@ public class LoginController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Not Found!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        anchLogin.setTopAnchor(vBoxLogin, 0.0);
-        anchLogin.setBottomAnchor(vBoxLogin, 0.0);
-        anchLogin.setLeftAnchor(vBoxLogin, 0.0);
-        anchLogin.setRightAnchor(vBoxLogin, 0.0);
     }
 }

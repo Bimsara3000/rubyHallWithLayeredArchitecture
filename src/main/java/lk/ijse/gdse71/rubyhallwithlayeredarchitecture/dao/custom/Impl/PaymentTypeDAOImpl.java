@@ -1,14 +1,15 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.PaymentTypeDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.PaymentTypeDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.PaymentType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class PaymentTypeDAOImpl {
-    public String getPaymentDescription(String paymentTypeId) throws SQLException {
+public class PaymentTypeDAOImpl implements PaymentTypeDAO {
+    public String getPaymentDescription(String paymentTypeId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select description from paymentType where paymentTypeId = ?", paymentTypeId);
 
         if (resultSet.next()){
@@ -17,7 +18,7 @@ public class PaymentTypeDAOImpl {
         return null;
     }
 
-    public String getNextPaymentTypeId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select paymentTypeId from paymentType order by paymentTypeId desc limit 1");
 
         if (rst.next()) {
@@ -30,41 +31,46 @@ public class PaymentTypeDAOImpl {
         return "PT001";
     }
 
-    public ArrayList<PaymentTypeDTO> getAllPaymentTypes() throws SQLException {
+    public ArrayList<PaymentType> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from paymentType");
 
-        ArrayList<PaymentTypeDTO> paymentTypeDTOS = new ArrayList<>();
+        ArrayList<PaymentType> paymentTypes = new ArrayList<>();
 
         while (resultSet.next()) {
-            PaymentTypeDTO paymentTypeDTO = new PaymentTypeDTO(
+            PaymentType paymentType = new PaymentType(
                     resultSet.getString(1),
                     resultSet.getString(2)
             );
-            paymentTypeDTOS.add(paymentTypeDTO);
+            paymentTypes.add(paymentType);
         }
-        return paymentTypeDTOS;
+        return paymentTypes;
     }
 
-    public boolean savePaymentType(PaymentTypeDTO paymentTypeDTO) throws SQLException {
+    public boolean save(PaymentType paymentType) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "insert into paymentType values (?,?)",
-                paymentTypeDTO.getPaymentTypeId(),
-                paymentTypeDTO.getDescription()
+                paymentType.getPaymentTypeId(),
+                paymentType.getDescription()
         );
     }
 
-    public boolean updatePaymentType(PaymentTypeDTO paymentTypeDTO) throws SQLException {
+    public boolean update(PaymentType paymentType) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "update paymentType set description=? where paymentTypeDTO=?",
-                paymentTypeDTO.getDescription(),
-                paymentTypeDTO.getPaymentTypeId()
+                paymentType.getDescription(),
+                paymentType.getPaymentTypeId()
         );
     }
 
-    public boolean deletePaymentType(String paymentTypeId) throws SQLException {
+    public boolean delete(String paymentTypeId) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "delete from paymentType where paymentTypeId = ?",
                 paymentTypeId
         );
+    }
+
+    @Override
+    public String getName(String id) throws SQLException, ClassNotFoundException {
+        return "";
     }
 }

@@ -1,14 +1,15 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.RoomTypeDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.RoomTypeDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.RoomType;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class RoomTypeDAOImpl {
-    public String getRoomType(String roomTypeId) throws SQLException {
+public class RoomTypeDAOImpl implements RoomTypeDAO {
+    public String getName(String roomTypeId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select description from roomType where roomTypeId = ?", roomTypeId);
 
         if (resultSet.next()){
@@ -17,7 +18,7 @@ public class RoomTypeDAOImpl {
         return null;
     }
 
-    public String getNextRoomTypeId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select roomTypeId from roomType order by roomTypeId desc limit 1");
 
         if (rst.next()) {
@@ -30,23 +31,38 @@ public class RoomTypeDAOImpl {
         return "RT001";
     }
 
-    public ArrayList<RoomTypeDTO> getAllRoomTypes() throws SQLException {
+    @Override
+    public boolean save(RoomType dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean update(RoomType dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    public ArrayList<RoomType> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from roomType");
 
-        ArrayList<RoomTypeDTO> roomTypeDTOS = new ArrayList<>();
+        ArrayList<RoomType> roomTypes = new ArrayList<>();
 
         while (resultSet.next()) {
-            RoomTypeDTO roomTypeDTO = new RoomTypeDTO(
+            RoomType roomType = new RoomType(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getDouble(3)
             );
-            roomTypeDTOS.add(roomTypeDTO);
+            roomTypes.add(roomType);
         }
-        return roomTypeDTOS;
+        return roomTypes;
     }
 
-    public ArrayList<String> getRoomTypes() throws SQLException {
+    public ArrayList<String> getRoomTypes() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select description from roomType");
 
         ArrayList<String> roomTypes = new ArrayList<>();
@@ -57,7 +73,7 @@ public class RoomTypeDAOImpl {
         return roomTypes;
     }
 
-    public String getRoomTypeId(String roomType) throws SQLException {
+    public String getRoomTypeId(String roomType) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select roomTypeId from roomType where description = ?", roomType);
 
         if (resultSet.next()){

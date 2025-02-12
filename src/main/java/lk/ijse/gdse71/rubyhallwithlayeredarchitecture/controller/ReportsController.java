@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import lk.ijse.gdse71.projectrubyhall.db.DBConnection;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.db.DBConnection;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.view.JasperViewer;
 
@@ -57,7 +57,31 @@ public class ReportsController {
 
     @FXML
     void onClickGenerateAllGuestReport(ActionEvent event) {
+        try {
+            JasperReport jasperReport = JasperCompileManager.compileReport(
+                    getClass()
+                            .getResourceAsStream("/report/AllGuestDetailsReport.jrxml"
+                            ));
 
+            Connection connection = DBConnection.getInstance().getConnection();
+
+            Map<String, Object> parameters = new HashMap<>();
+
+            parameters.put("P_Date", LocalDate.now().toString());
+
+            JasperPrint jasperPrint = JasperFillManager.fillReport(
+                    jasperReport,
+                    parameters,
+                    connection
+            );
+
+            JasperViewer.viewReport(jasperPrint, false);
+        } catch (JRException e) {
+            new Alert(Alert.AlertType.ERROR, "Fail to generate report...!").show();
+            e.printStackTrace();
+        } catch (SQLException e) {
+            new Alert(Alert.AlertType.ERROR, "DB error...!").show();
+        }
     }
 
     @FXML

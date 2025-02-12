@@ -2,8 +2,10 @@ package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.RoomDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.RoomDTO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Room;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -93,5 +95,17 @@ public class RoomDAOImpl implements RoomDAO {
         }
 
         return rooms;
+    }
+
+    public boolean deleteRoom(String roomId, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction("delete from room where roomId = ?",connection,roomId);
+    }
+
+    public boolean updateRoom(Room room, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction("update room set roomTypeID=?,floorId=?,state=? where roomId=?",connection,
+                room.getRoomTypeId(),
+                room.getFloorId(),
+                room.getState(),
+                room.getRoomId());
     }
 }

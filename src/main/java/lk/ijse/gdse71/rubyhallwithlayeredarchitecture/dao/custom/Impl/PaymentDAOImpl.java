@@ -1,20 +1,21 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.PaymentDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.PaymentDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Payment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class PaymentDAOImpl {
-    public ArrayList<PaymentDTO> getAllPayments() throws SQLException {
+public class PaymentDAOImpl implements PaymentDAO {
+    public ArrayList<Payment> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from payment");
 
-        ArrayList<PaymentDTO> payments = new ArrayList<>();
+        ArrayList<Payment> payments = new ArrayList<>();
 
         while (resultSet.next()) {
-            PaymentDTO payment = new PaymentDTO(
+            Payment payment = new Payment(
                     resultSet.getString(1),
                     resultSet.getString(2),
                     resultSet.getString(3),
@@ -24,5 +25,30 @@ public class PaymentDAOImpl {
             payments.add(payment);
         }
         return payments;
+    }
+
+    @Override
+    public String getNextId() throws SQLException, ClassNotFoundException {
+        return "";
+    }
+
+    @Override
+    public boolean save(Payment dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean update(Payment dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public String getName(String id) throws SQLException, ClassNotFoundException {
+        return "";
     }
 }

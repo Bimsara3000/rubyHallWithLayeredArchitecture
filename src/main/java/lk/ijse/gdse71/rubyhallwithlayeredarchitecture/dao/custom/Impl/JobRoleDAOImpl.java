@@ -1,29 +1,30 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.Impl;
 
-import lk.ijse.gdse71.projectrubyhall.dto.JobRoleDTO;
-import lk.ijse.gdse71.projectrubyhall.util.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.JobRoleDAO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.JobRole;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class JobRoleDAOImpl {
+public class JobRoleDAOImpl implements JobRoleDAO {
 
-    public JobRoleDTO getJobRole(String jobRoleId) throws SQLException {
+    public JobRole getJobRole(String jobRoleId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from jobRole where jobRoleId = ?", jobRoleId);
 
         if (resultSet.next()) {
-            JobRoleDTO jobRoleDTO = new JobRoleDTO();
-            jobRoleDTO.setJobRoleId(resultSet.getString("jobRoleId"));
-            jobRoleDTO.setName(resultSet.getString("name"));
+            JobRole jobRole = new JobRole();
+            jobRole.setJobRoleId(resultSet.getString("jobRoleId"));
+            jobRole.setName(resultSet.getString("name"));
 
-            return jobRoleDTO;
+            return jobRole;
         }
 
         return null;
     }
 
-    public String getJobRoleName(String jobRoleId) throws SQLException {
+    public String getName(String jobRoleId) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select name from jobRole where jobRoleId = ?", jobRoleId);
 
         if (resultSet.next()){
@@ -32,7 +33,7 @@ public class JobRoleDAOImpl {
         return null;
     }
 
-    public String getNextJobRoleId() throws SQLException {
+    public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select jobRoleId from jobRole order by jobRoleId desc limit 1");
 
         if (rst.next()) {
@@ -45,22 +46,37 @@ public class JobRoleDAOImpl {
         return "J001";
     }
 
-    public ArrayList<JobRoleDTO> getAllJobRoles() throws SQLException {
+    @Override
+    public boolean save(JobRole dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean update(JobRole dto) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    @Override
+    public boolean delete(String id) throws SQLException, ClassNotFoundException {
+        return false;
+    }
+
+    public ArrayList<JobRole> getAll() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select * from jobRole");
 
-        ArrayList<JobRoleDTO> jobRoleDTOS = new ArrayList<>();
+        ArrayList<JobRole> jobRoles = new ArrayList<>();
 
         while (resultSet.next()) {
-            JobRoleDTO jobRoleDTO = new JobRoleDTO(
+            JobRole jobRole = new JobRole(
                     resultSet.getString(1),
                     resultSet.getString(2)
             );
-            jobRoleDTOS.add(jobRoleDTO);
+            jobRoles.add(jobRole);
         }
-        return jobRoleDTOS;
+        return jobRoles;
     }
 
-    public ArrayList<String> getJobRoles() throws SQLException {
+    public ArrayList<String> getJobRoles() throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select name from jobRole");
 
         ArrayList<String> jobRoles = new ArrayList<>();
@@ -71,7 +87,7 @@ public class JobRoleDAOImpl {
         return jobRoles;
     }
 
-    public String getJobRoleId(String name) throws SQLException {
+    public String getJobRoleId(String name) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CrudUtil.execute("select jobRoleId from jobRole where name = ?", name);
 
         if (resultSet.next()){

@@ -11,9 +11,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
-import lk.ijse.gdse71.projectrubyhall.dto.PaymentDTO;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.PaymentTM;
-import lk.ijse.gdse71.projectrubyhall.model.*;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.GuestBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.PaymentBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.PaymentTypeBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.ReservationBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.PaymentDTO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.PaymentTM;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -74,22 +78,22 @@ public class PaymentsController implements Initializable {
 
     }
 
-    PaymentModel paymentModel = new PaymentModel();
-    ReservationModel reservationModel = new ReservationModel();
-    GuestModel guestModel = new GuestModel();
-    PaymentTypeModel paymentTypeModel = new PaymentTypeModel();
+    PaymentBO paymentBO = (PaymentBO) BOFactory.getInstance().getBO(BOFactory.BOType.PAYMENT);
+    ReservationBO reservationBO = (ReservationBO) BOFactory.getInstance().getBO(BOFactory.BOType.RESERVATION);
+    GuestBO guestBO = (GuestBO) BOFactory.getInstance().getBO(BOFactory.BOType.GUEST);
+    PaymentTypeBO paymentTypeBO = (PaymentTypeBO) BOFactory.getInstance().getBO(BOFactory.BOType.PAYMENT_TYPE);
 
     public void loadTable() {
         try {
-            ArrayList<PaymentDTO> paymentDTOS = paymentModel.getAllPayments();
+            ArrayList<PaymentDTO> paymentDTOS = paymentBO.getAll();
 
             ObservableList<PaymentTM> paymentTMS = FXCollections.observableArrayList();
 
             for (PaymentDTO paymentDTO : paymentDTOS) {
                 PaymentTM paymentTM = new PaymentTM(
                         paymentDTO.getPaymentId(),
-                        guestModel.getGuestName(reservationModel.getGuestId(paymentDTO.getReservationId())),
-                        paymentTypeModel.getPaymentDescription(paymentDTO.getPaymentTypeId()),
+                        guestBO.getName(reservationBO.getGuestId(paymentDTO.getReservationId())),
+                        paymentTypeBO.getPaymentDescription(paymentDTO.getPaymentTypeId()),
                         paymentDTO.getDate(),
                         paymentDTO.getAmount()
                 );
@@ -100,6 +104,8 @@ public class PaymentsController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
             new Alert(Alert.AlertType.ERROR, "Can't load data to the table!").show();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

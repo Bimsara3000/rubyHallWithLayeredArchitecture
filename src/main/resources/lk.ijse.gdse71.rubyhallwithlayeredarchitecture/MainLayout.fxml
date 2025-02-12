@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchMainLayout" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse71.rubyhallwithlayeredarchitecture.controller.MainLayoutController">
+   <children>
+      <AnchorPane fx:id="anchLeft" layoutX="-3.0" prefHeight="800.0" prefWidth="250.0" style="-fx-background-color: #c1121f;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="950.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox fx:id="vBox" layoutX="19.0" layoutY="31.0" prefHeight="800.0" prefWidth="250.0" spacing="30.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/app_icon.png" />
+                     </image>
+                     <VBox.margin>
+                        <Insets left="15.0" />
+                     </VBox.margin>
+                  </ImageView>
+                  <Button fx:id="btnReservations" mnemonicParsing="false" onAction="#clickBtnReservations" style="-fx-background-color: #c1121f;" text="Reservations" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnGuests" mnemonicParsing="false" onAction="#clickBtnGuests" style="-fx-background-color: #c1121f;" text="Guests" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnRooms" mnemonicParsing="false" onAction="#clickBtnRooms" style="-fx-background-color: #c1121f;" text="Rooms" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnPayments" mnemonicParsing="false" onAction="#clickBtnPayments" style="-fx-background-color: #c1121f;" text="Payments" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnUsers" mnemonicParsing="false" onAction="#clickBtnUsers" style="-fx-background-color: #c1121f;" text="Advanced" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="btnReports" mnemonicParsing="false" onAction="#clickBtnReports" style="-fx-background-color: #c1121f;" text="Reports" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#onClickLogout" prefHeight="40.0" prefWidth="100.0" style="-fx-background-radius: 10;" text="Logout" textFill="#c1121f">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets left="10.0" top="50.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+            </VBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane fx:id="anchBlank" layoutX="246.0" prefHeight="800.0" prefWidth="950.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="246.0" AnchorPane.rightAnchor="0.40000000000009095" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>

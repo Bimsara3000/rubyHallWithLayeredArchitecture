@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ServiceBOImpl implements ServiceBO {
-    ServiceDAO serviceDAO = (ServiceDAO) DAOFactory.getInstance(DAOFactory.DAOType.SERVICE);
+    ServiceDAO serviceDAO = (ServiceDAO) DAOFactory.getInstance().getDAO(DAOFactory.DAOType.SERVICE);
 
     public ArrayList<ServiceDTO> getAll() throws SQLException, ClassNotFoundException {
         ArrayList<Service> services = serviceDAO.getAll();

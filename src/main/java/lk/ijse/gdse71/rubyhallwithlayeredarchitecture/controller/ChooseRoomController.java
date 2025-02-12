@@ -7,11 +7,12 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import lk.ijse.gdse71.projectrubyhall.dto.tm.ChooseRoomTM;
-import lk.ijse.gdse71.projectrubyhall.model.FloorModel;
-import lk.ijse.gdse71.projectrubyhall.model.ReservationRoomModel;
-import lk.ijse.gdse71.projectrubyhall.model.RoomModel;
-import lk.ijse.gdse71.projectrubyhall.model.RoomTypeModel;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.FloorBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.ReservationRoomBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.RoomBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.RoomTypeBO;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.ChooseRoomTM;
 import lombok.Setter;
 
 import java.net.URL;
@@ -87,10 +88,10 @@ public class ChooseRoomController implements Initializable {
     @Setter
     private String endDate;
 
-    RoomModel roomModel = new RoomModel();
-    FloorModel floorModel = new FloorModel();
-    RoomTypeModel roomTypeModel = new RoomTypeModel();
-    ReservationRoomModel reservationRoomModel = new ReservationRoomModel();
+    RoomTypeBO roomTypeBO = (RoomTypeBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM_TYPE);
+    FloorBO floorBO = (FloorBO) BOFactory.getInstance().getBO(BOFactory.BOType.FLOOR);
+    RoomBO roomBO = (RoomBO) BOFactory.getInstance().getBO(BOFactory.BOType.ROOM);
+    ReservationRoomBO reservationRoomBO = (ReservationRoomBO) BOFactory.getInstance().getBO(BOFactory.BOType.RESERVATION_ROOM);
 
     @FXML
     void onClickAdd(ActionEvent event) {
@@ -113,7 +114,7 @@ public class ChooseRoomController implements Initializable {
         RadioButton floor = (RadioButton) tGrpFloor.getSelectedToggle();
 
         try {
-            ArrayList<String> rooms = roomModel.getRooms(roomTypeModel.getRoomTypeId(roomType.getText()), floorModel.getFloorId(floor.getText()));
+            ArrayList<String> rooms = roomBO.getRooms(roomTypeBO.getRoomTypeId(roomType.getText()), floorBO.getFloorId(floor.getText()));
 
             ObservableList<ChooseRoomTM> chooseRoomTMS = FXCollections.observableArrayList();
 
@@ -122,12 +123,14 @@ public class ChooseRoomController implements Initializable {
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "DB Error!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 
     public void loadTable() {
         try {
-            ArrayList<String> rooms = roomModel.getAllAvailableRooms();
+            ArrayList<String> rooms = roomBO.getAllAvailableRooms();
 
             ObservableList<ChooseRoomTM> chooseRoomTMS = FXCollections.observableArrayList();
 
@@ -136,7 +139,7 @@ public class ChooseRoomController implements Initializable {
                 chooseRoomTMS.add(chooseRoomTM);
             }
 
-            ArrayList<String> rooms1 = reservationRoomModel.getAllPossibleRooms(startDate, endDate);
+            ArrayList<String> rooms1 = reservationRoomBO.getAllPossibleRooms(startDate, endDate);
 
             if (rooms1 != null) {
                 for (String room : rooms1) {
@@ -149,6 +152,8 @@ public class ChooseRoomController implements Initializable {
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR, "DB Error!").show();
             e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
         }
     }
 

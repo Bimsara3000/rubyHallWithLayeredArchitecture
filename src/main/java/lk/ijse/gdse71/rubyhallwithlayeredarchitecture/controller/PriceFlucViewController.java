@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class PriceFlucViewController implements Initializable {
-    PriceFlucBO priceFlucBO = (PriceFlucBO) BOFactory.getInstance(BOFactory.BOType.PRICE_FLUC);
+    PriceFlucBO priceFlucBO = (PriceFlucBO) BOFactory.getInstance().getBO(BOFactory.BOType.PRICE_FLUC);
 
     @FXML
     private Button btnDelete;

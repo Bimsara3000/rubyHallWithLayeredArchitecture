@@ -48,47 +48,47 @@ public class AdvancedController implements Initializable {
 
     @FXML
     void onClickFacilities(ActionEvent event) {
-        navigateTo("/view/FacilityView.fxml", "Facilities", "/images/Hospitality.jpg");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/FacilityView.fxml", "Facilities", "/images/Hospitality.jpg");
     }
 
     @FXML
     void onClickFloors(ActionEvent event) {
-        navigateTo("/view/FloorView.fxml", "Floors", "/images/B49-2.jpg");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/FloorView.fxml", "Floors", "/images/B49-2.jpg");
     }
 
     @FXML
     void onClickJobRoles(ActionEvent event) {
-        navigateTo("/view/JobRoleView.fxml", "Job Roles", "/images/jobRole.png");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/JobRoleView.fxml", "Job Roles", "/resources/images/jobRole.png");
     }
 
     @FXML
     void onClickPackages(ActionEvent event) {
-        navigateTo("/view/PackageView.fxml", "Packages", "/images/pacages.jpg");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/PackageView.fxml", "Packages", "/images/pacages.jpg");
     }
 
     @FXML
     void onClickPaymentTypes(ActionEvent event) {
-        navigateTo("/view/PaymentTypeView.fxml", "Payment Types", "/images/paymentTypes.jpg");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/PaymentTypeView.fxml", "Payment Types", "/images/paymentTypes.jpg");
     }
 
     @FXML
     void onClickPriceFluctuations(ActionEvent event) {
-        navigateTo("/view/PriceFlucView.fxml", "Price Fluctuations", "/images/chart-graph-business-illustration_1134986-18347.jpg");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/PriceFlucView.fxml", "Price Fluctuations", "/images/chart-graph-business-illustration_1134986-18347.jpg");
     }
 
     @FXML
     void onClickRoomTypes(ActionEvent event) {
-        navigateTo("/view/RoomTypeView.fxml", "Room Types", "/images/room.jpg");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/RoomTypeView.fxml", "Room Types", "/images/room.jpg");
     }
 
     @FXML
     void onClickServices(ActionEvent event) {
-        navigateTo("/view/ServiceView.fxml", "Services", "/images/istockphoto-1134867704-612x612.jpg");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/ServiceView.fxml", "Services", "/images/istockphoto-1134867704-612x612.jpg");
     }
 
     @FXML
     void onClickUsers(ActionEvent event) {
-        navigateTo("/view/UserView.fxml", "Users", "/images/user.png");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/UserView.fxml", "Users", "/images/user.png");
     }
 
     public void navigateTo(String fxmlPath, String title, String imagePath) {
