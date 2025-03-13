@@ -65,7 +65,7 @@ public class PaymentTypeViewController implements Initializable {
                 boolean isDeleted = paymentTypeBO.delete(paymentTypeTM.getPaymentTypeId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The payment type is deleted!").show();
-                    loadTable();
+                    refresh();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the payment type!").show();
                 }
@@ -208,6 +208,8 @@ public class PaymentTypeViewController implements Initializable {
         loadNextPaymentTypeId();
         loadTable();
         txtDesc.setText("");
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 
     @Override

@@ -15,4 +15,5 @@ public interface RoomDAO extends CrudDAO<Room> {
     public ArrayList<String> getAllAvailableRooms() throws SQLException, ClassNotFoundException;
     public boolean deleteRoom(String roomId, Connection connection) throws SQLException, ClassNotFoundException;
     public boolean updateRoom(Room room, Connection connection) throws SQLException, ClassNotFoundException;
+    public boolean saveRoom(Room room, Connection connection) throws SQLException, ClassNotFoundException;
 }

@@ -9,4 +9,5 @@ import lombok.*;
 @ToString
 public class ChooseRoomTM {
     private String roomId;
+    private String facilities;
 }

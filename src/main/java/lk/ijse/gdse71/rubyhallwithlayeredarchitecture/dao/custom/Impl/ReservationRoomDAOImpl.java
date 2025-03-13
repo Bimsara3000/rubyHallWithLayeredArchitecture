@@ -4,6 +4,7 @@ import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.ReservationRoomDAO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.ReservationRoom;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,6 +46,23 @@ public class ReservationRoomDAOImpl implements ReservationRoomDAO {
         }
 
         return rooms;
+    }
+
+    @Override
+    public boolean saveReservationRoom(ReservationRoom reservationRoom, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction(
+                "insert into reservationRoom values (?,?,?,?)",
+                connection,
+                reservationRoom.getReservationId(),
+                reservationRoom.getRoomId(),
+                reservationRoom.getStartDate(),
+                reservationRoom.getEndDate()
+        );
+    }
+
+    @Override
+    public boolean deleteReservationRoom(String resId, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction("delete from reservationRoom where reservationId = ?",connection,resId);
     }
 
     @Override

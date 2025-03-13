@@ -58,7 +58,7 @@ public class AdvancedController implements Initializable {
 
     @FXML
     void onClickJobRoles(ActionEvent event) {
-        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/JobRoleView.fxml", "Job Roles", "/resources/images/jobRole.png");
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/JobRoleView.fxml", "Job Roles", "/images/jobRole.png");
     }
 
     @FXML

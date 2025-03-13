@@ -17,4 +17,5 @@ public interface RoomBO extends SuperBO {
     public ArrayList<String> getAllAvailableRooms() throws SQLException, ClassNotFoundException;
     public boolean deleteRoom(String roomId, Connection connection) throws SQLException, ClassNotFoundException;
     public boolean updateRoom(RoomDTO room, Connection connection) throws SQLException, ClassNotFoundException;
+    public boolean saveRoom(RoomDTO roomDTO, Connection connection) throws SQLException, ClassNotFoundException;
 }

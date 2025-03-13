@@ -28,7 +28,7 @@ public class UserBOImpl implements UserBO {
         ArrayList<UserDTO> userDTOS = new ArrayList<>();
 
         for (User user : users) {
-            userDTOS.add(new UserDTO(user.getUserId(),user.getJobRoleId(),user.getEmail(),user.getPassword()));
+            userDTOS.add(new UserDTO(user.getUserId(),user.getJobRoleId(),user.getName(),user.getEmail(),user.getPassword()));
         }
         return userDTOS;
     }

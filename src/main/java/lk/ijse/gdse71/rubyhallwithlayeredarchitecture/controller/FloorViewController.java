@@ -52,7 +52,7 @@ public class FloorViewController implements Initializable {
         FloorTM floorTM = tblFloor.getSelectionModel().getSelectedItem();
 
         if (floorTM == null) {
-            new Alert(Alert.AlertType.ERROR, "Please select a payment type!").show();
+            new Alert(Alert.AlertType.ERROR, "Please select a floor type!").show();
             return;
         }
 
@@ -65,7 +65,7 @@ public class FloorViewController implements Initializable {
                 boolean isDeleted = floorBO.delete(floorTM.getFloorId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The floor is deleted!").show();
-                    loadTable();
+                    refresh();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the floor!").show();
                 }
@@ -208,6 +208,8 @@ public class FloorViewController implements Initializable {
         loadNextFloorId();
         loadTable();
         txtDesc.setText("");
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 
     @Override
@@ -216,5 +218,7 @@ public class FloorViewController implements Initializable {
         tColDesc.setCellValueFactory(new PropertyValueFactory<>("description"));
         loadNextFloorId();
         loadTable();
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 }

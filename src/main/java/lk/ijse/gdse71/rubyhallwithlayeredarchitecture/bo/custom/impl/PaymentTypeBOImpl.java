@@ -45,4 +45,9 @@ public class PaymentTypeBOImpl implements PaymentTypeBO {
     public boolean delete(String paymentTypeId) throws SQLException, ClassNotFoundException {
         return paymentTypeDAO.delete(paymentTypeId);
     }
+
+    @Override
+    public String getPaymentTypeId(String paymentType) throws SQLException, ClassNotFoundException {
+        return paymentTypeDAO.getPaymentTypeId(paymentType);
+    }
 }

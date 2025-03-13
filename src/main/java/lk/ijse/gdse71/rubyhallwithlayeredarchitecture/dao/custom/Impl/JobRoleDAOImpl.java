@@ -47,18 +47,29 @@ public class JobRoleDAOImpl implements JobRoleDAO {
     }
 
     @Override
-    public boolean save(JobRole dto) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean save(JobRole jobRole) throws SQLException, ClassNotFoundException {
+        return CrudUtil.execute(
+                "insert into jobRole values (?,?)",
+                jobRole.getJobRoleId(),
+                jobRole.getName()
+        );
     }
 
     @Override
-    public boolean update(JobRole dto) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean update(JobRole jobRole) throws SQLException, ClassNotFoundException {
+        return CrudUtil.execute(
+                "update jobRole set name=? where jobRoleId=?",
+                jobRole.getName(),
+                jobRole.getJobRoleId()
+        );
     }
 
     @Override
-    public boolean delete(String id) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean delete(String jobRoleId) throws SQLException, ClassNotFoundException {
+        return CrudUtil.execute(
+                "delete from jobRole where jobRoleId = ?",
+                jobRoleId
+        );
     }
 
     public ArrayList<JobRole> getAll() throws SQLException, ClassNotFoundException {

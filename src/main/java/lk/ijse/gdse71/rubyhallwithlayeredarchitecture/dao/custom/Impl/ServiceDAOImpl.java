@@ -54,6 +54,16 @@ public class ServiceDAOImpl implements ServiceDAO {
         return services.toString();
     }
 
+    @Override
+    public String getServiceId(String service) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CrudUtil.execute("select serviceId from service where description = ?", service);
+
+        if (resultSet.next()) {
+            return resultSet.getString(1);
+        }
+        return null;
+    }
+
     public boolean save(Service service) throws SQLException, ClassNotFoundException {
         return CrudUtil.execute(
                 "insert into service values (?,?,?)",

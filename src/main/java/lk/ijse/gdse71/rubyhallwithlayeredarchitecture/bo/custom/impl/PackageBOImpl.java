@@ -49,4 +49,9 @@ public class PackageBOImpl implements PackageBO {
     public boolean delete(String packageId) throws SQLException, ClassNotFoundException {
         return packageDAO.delete(packageId);
     }
+
+    @Override
+    public String getPackageId(String packages) throws SQLException, ClassNotFoundException {
+        return packageDAO.getPackageId(packages);
+    }
 }

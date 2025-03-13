@@ -71,7 +71,7 @@ public class ServiceViewController implements Initializable {
                 boolean isDeleted = serviceBO.delete(serviceTM.getServiceId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The service is deleted!").show();
-                    loadTable();
+                    refresh();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the service!").show();
                 }
@@ -240,6 +240,8 @@ public class ServiceViewController implements Initializable {
         loadTable();
         txtDesc.setText("");
         txtPrice.setText("");
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 
     @Override

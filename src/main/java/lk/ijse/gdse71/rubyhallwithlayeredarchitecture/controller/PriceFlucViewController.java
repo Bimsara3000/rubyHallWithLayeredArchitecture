@@ -82,7 +82,7 @@ public class PriceFlucViewController implements Initializable {
                 boolean isDeleted = priceFlucBO.delete(priceFlucTM.getPriceFlucId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The price fluctuation is deleted!").show();
-                    loadTable();
+                    refresh();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the price fluctuation!").show();
                 }
@@ -290,6 +290,8 @@ public class PriceFlucViewController implements Initializable {
         txtEDate.setText("");
         txtPercentage.setText("");
         txtSDate.setText("");
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 
     @Override

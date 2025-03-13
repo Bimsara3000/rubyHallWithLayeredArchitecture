@@ -12,4 +12,7 @@ public interface RoomTypeBO extends SuperBO {
     public ArrayList<RoomTypeDTO> getAll() throws SQLException, ClassNotFoundException;
     public ArrayList<String> getRoomTypes() throws SQLException, ClassNotFoundException;
     public String getRoomTypeId(String roomType) throws SQLException, ClassNotFoundException;
+    public boolean save(RoomTypeDTO roomTypeDTO) throws SQLException, ClassNotFoundException;
+    public boolean update(RoomTypeDTO roomTypeDTO) throws SQLException, ClassNotFoundException;
+    public boolean delete(String roomTypeId) throws SQLException, ClassNotFoundException;
 }

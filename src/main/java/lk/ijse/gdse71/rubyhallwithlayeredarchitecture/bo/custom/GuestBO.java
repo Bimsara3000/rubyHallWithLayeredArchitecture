@@ -13,4 +13,6 @@ public interface GuestBO extends SuperBO {
     public boolean update(GuestDTO guestDTO) throws SQLException, ClassNotFoundException;
     public boolean delete(String id) throws SQLException, ClassNotFoundException;
     public String getName(String id) throws SQLException, ClassNotFoundException;
+    public String getGuestId(String guestName) throws SQLException, ClassNotFoundException;
+    public String getEmail(String guestName) throws SQLException, ClassNotFoundException;
 }

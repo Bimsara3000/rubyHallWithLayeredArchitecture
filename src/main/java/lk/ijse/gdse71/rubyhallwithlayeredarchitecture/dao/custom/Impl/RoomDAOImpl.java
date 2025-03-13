@@ -108,4 +108,16 @@ public class RoomDAOImpl implements RoomDAO {
                 room.getState(),
                 room.getRoomId());
     }
+
+    @Override
+    public boolean saveRoom(Room room, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction(
+                "insert into room values (?,?,?,?)",
+                connection,
+                room.getRoomId(),
+                room.getRoomTypeId(),
+                room.getFloorId(),
+                room.getState()
+        );
+    }
 }

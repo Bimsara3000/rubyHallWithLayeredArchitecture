@@ -89,7 +89,7 @@ public class PackageViewController implements Initializable {
                 boolean isDeleted = packageBO.delete(packageTM.getPackageId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The package is deleted!").show();
-                    loadTable();
+                    refresh();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the package!").show();
                 }
@@ -321,6 +321,8 @@ public class PackageViewController implements Initializable {
         txtValidity.setText("");
         txtName.setText("");
         txtDuration.setText("");
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 
 

@@ -42,4 +42,16 @@ public class JobRoleBOImpl implements JobRoleBO {
     public String getJobRoleId(String name) throws SQLException, ClassNotFoundException {
         return jobRoleDAO.getJobRoleId(name);
     }
+
+    public boolean save(JobRoleDTO jobRoleDTO) throws SQLException, ClassNotFoundException {
+        return jobRoleDAO.save(new JobRole(jobRoleDTO.getJobRoleId(),jobRoleDTO.getName()));
+    }
+
+    public boolean update(JobRoleDTO jobRoleDTO) throws SQLException, ClassNotFoundException {
+        return jobRoleDAO.update(new JobRole(jobRoleDTO.getJobRoleId(),jobRoleDTO.getName()));
+    }
+
+    public boolean delete(String jobRoleId) throws SQLException, ClassNotFoundException {
+        return jobRoleDAO.delete(jobRoleId);
+    }
 }

@@ -7,4 +7,5 @@ import java.sql.SQLException;
 
 public interface ServiceDAO extends CrudDAO<Service> {
     public String getServices(String serviceId) throws SQLException, ClassNotFoundException;
+    public String getServiceId(String service) throws SQLException, ClassNotFoundException;
 }

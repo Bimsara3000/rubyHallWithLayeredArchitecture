@@ -13,4 +13,5 @@ public interface ServiceBO extends SuperBO {
     public boolean save(ServiceDTO serviceDTO) throws SQLException, ClassNotFoundException;
     public boolean update(ServiceDTO serviceDTO) throws SQLException, ClassNotFoundException;
     public boolean delete(String serviceId) throws SQLException, ClassNotFoundException;
+    public String getServiceId(String service) throws SQLException, ClassNotFoundException;
 }

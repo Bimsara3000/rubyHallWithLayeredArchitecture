@@ -46,4 +46,14 @@ public class GuestBOImpl implements GuestBO {
     public String getName(String guestId) throws SQLException, ClassNotFoundException {
         return guestDAO.getName(guestId);
     }
+
+    @Override
+    public String getGuestId(String guestName) throws SQLException, ClassNotFoundException {
+        return guestDAO.getGuestId(guestName);
+    }
+
+    @Override
+    public String getEmail(String guestName) throws SQLException, ClassNotFoundException {
+        return guestDAO.getEmail(guestName);
+    }
 }

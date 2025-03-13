@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="329.0" prefWidth="471.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse71.rubyhallwithlayeredarchitecture.controller.UpdatePaymentViewController">
+   <children>
+      <Label layoutX="29.0" layoutY="35.0" text="Payment ID">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblPaymentId" layoutX="174.0" layoutY="35.0" prefHeight="27.0" prefWidth="150.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="29.0" layoutY="79.0" text="Guest Name">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="29.0" layoutY="127.0" text="Payment Type">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="29.0" layoutY="175.0" text="Date">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="374.0" layoutY="275.0" mnemonicParsing="false" onAction="#onClickUpdate" style="-fx-background-radius: 15;" text="Update">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="292.0" layoutY="275.0" mnemonicParsing="false" onAction="#onClickClear" style="-fx-background-radius: 15;" text="Clear">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="cmbGuestName" layoutX="174.0" layoutY="80.0" onAction="#OnGuestSelection" prefWidth="150.0" promptText="guest name" />
+      <ComboBox fx:id="cmbPaymentType" layoutX="174.0" layoutY="128.0" onAction="#OnPaymentTypeSelection" prefWidth="150.0" promptText="payment type" />
+      <DatePicker fx:id="dPPayments" layoutX="174.0" layoutY="177.0" onAction="#OnDateSelection" promptText="choose the date" />
+      <Label layoutX="29.0" layoutY="223.0" text="Amount">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Label fx:id="lblPaymentAmount" layoutX="174.0" layoutY="223.0" prefHeight="27.0" prefWidth="150.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

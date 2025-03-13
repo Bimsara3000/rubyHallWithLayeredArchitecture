@@ -61,4 +61,9 @@ public class RoomBOImpl implements RoomBO {
     public boolean updateRoom(RoomDTO room, Connection connection) throws SQLException, ClassNotFoundException {
         return roomDAO.updateRoom(new Room(room.getRoomId(),room.getRoomTypeId(),room.getFloorId(),room.getState()),connection);
     }
+
+    @Override
+    public boolean saveRoom(RoomDTO roomDTO, Connection connection) throws SQLException, ClassNotFoundException {
+        return roomDAO.saveRoom(new Room(roomDTO.getRoomId(),roomDTO.getRoomTypeId(),roomDTO.getFloorId(),roomDTO.getState()),connection);
+    }
 }

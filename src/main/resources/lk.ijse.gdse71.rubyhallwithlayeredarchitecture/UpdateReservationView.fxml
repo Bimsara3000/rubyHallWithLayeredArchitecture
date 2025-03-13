@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="563.0" prefWidth="636.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse71.rubyhallwithlayeredarchitecture.controller.AddReservationViewController">
+<AnchorPane prefHeight="563.0" prefWidth="636.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="lk.ijse.gdse71.rubyhallwithlayeredarchitecture.controller.UpdateReservationViewController">
    <children>
       <VBox layoutX="24.0" layoutY="10.0" spacing="25.0">
          <children>
@@ -95,7 +95,7 @@
             <TextField fx:id="txtDesc" prefHeight="26.0" prefWidth="268.0" />
          </children>
       </VBox>
-      <Button fx:id="btnAdd" layoutX="563.0" layoutY="512.0" mnemonicParsing="false" onAction="#onClickAdd" style="-fx-background-radius: 10;" text="Add">
+      <Button fx:id="btnUpdate" layoutX="538.0" layoutY="512.0" mnemonicParsing="false" onAction="#onClickUpdate" style="-fx-background-radius: 10;" text="Update">
          <font>
             <Font size="18.0" />
          </font>
@@ -110,7 +110,7 @@
             <Font size="18.0" />
          </font>
       </Button>
-      <Button fx:id="btnClear" layoutX="479.0" layoutY="512.0" mnemonicParsing="false" onAction="#onClickClear" style="-fx-background-radius: 10;" text="Clear">
+      <Button fx:id="btnClear" layoutX="457.0" layoutY="512.0" mnemonicParsing="false" onAction="#onClickClear" style="-fx-background-radius: 10;" text="Clear">
          <font>
             <Font size="18.0" />
          </font>

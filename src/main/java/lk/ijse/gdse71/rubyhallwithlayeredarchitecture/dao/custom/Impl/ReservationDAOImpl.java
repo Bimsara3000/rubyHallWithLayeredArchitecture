@@ -4,6 +4,7 @@ import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.CrudUtil;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.ReservationDAO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Reservation;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -69,5 +70,50 @@ public class ReservationDAOImpl implements ReservationDAO {
             return resultSet.getString(1);
         }
         return null;
+    }
+
+    @Override
+    public String getReservationId(String guestId) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CrudUtil.execute("select reservationId from reservation where guestId = ?", guestId);
+
+        if (resultSet.next()){
+            return resultSet.getString(1);
+        }
+        return null;
+    }
+
+    @Override
+    public boolean saveReservation(Reservation reservation, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction(
+                "insert into reservation values (?,?,?,?,?,?,?)",
+                connection,
+                reservation.getReservationId(),
+                reservation.getUserId(),
+                reservation.getGuestId(),
+                reservation.getPackageId(),
+                reservation.getGuestCount(),
+                reservation.getDate(),
+                reservation.getDescription()
+        );
+    }
+
+    @Override
+    public boolean updateReservation(Reservation reservation, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction(
+                "update reservation set userId=?,guestId=?,packageId=?,guestCount=?,date=?,description=? where reservationId=?",
+                connection,
+                reservation.getUserId(),
+                reservation.getGuestId(),
+                reservation.getPackageId(),
+                reservation.getGuestCount(),
+                reservation.getDate(),
+                reservation.getDescription(),
+                reservation.getReservationId()
+        );
+    }
+
+    @Override
+    public boolean deleteReservation(String reservationId, Connection connection) throws SQLException, ClassNotFoundException {
+        return CrudUtil.executeTransaction("delete from reservation where reservationId = ?",connection,reservationId);
     }
 }

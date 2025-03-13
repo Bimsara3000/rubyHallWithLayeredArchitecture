@@ -85,7 +85,7 @@ public class UserViewController implements Initializable {
                 boolean isDeleted = userBO.delete(user.getUserId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The user is deleted!").show();
-                    loadTable();
+                    refresh();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the user!").show();
                 }
@@ -295,6 +295,8 @@ public class UserViewController implements Initializable {
         txtEmail.setText("");
         txtName.setText("");
         txtPassword.setText("");
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 
     @Override

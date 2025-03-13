@@ -6,6 +6,7 @@ import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dao.custom.ReservationDAO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.ReservationDTO;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.entity.Reservation;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -28,5 +29,43 @@ public class ReservationBOImpl implements ReservationBO {
 
     public String getGuestId(String reservationId) throws SQLException, ClassNotFoundException {
         return reservationDAO.getGuestId(reservationId);
+    }
+
+    @Override
+    public String getReservationId(String guestId) throws SQLException, ClassNotFoundException {
+        return reservationDAO.getReservationId(guestId);
+    }
+
+    @Override
+    public boolean saveReservation(ReservationDTO reservationDTO, Connection connection) throws SQLException, ClassNotFoundException {
+        return reservationDAO.saveReservation(new Reservation(
+                reservationDTO.getReservationId(),
+                reservationDTO.getUserId(),
+                reservationDTO.getGuestId(),
+                reservationDTO.getPackageId(),
+                reservationDTO.getGuestCount(),
+                reservationDTO.getDate(),
+                reservationDTO.getDescription()),
+                connection
+        );
+    }
+
+    @Override
+    public boolean updateReservation(ReservationDTO reservationDTO, Connection connection) throws SQLException, ClassNotFoundException {
+        return reservationDAO.updateReservation(new Reservation(
+                        reservationDTO.getReservationId(),
+                        reservationDTO.getUserId(),
+                        reservationDTO.getGuestId(),
+                        reservationDTO.getPackageId(),
+                        reservationDTO.getGuestCount(),
+                        reservationDTO.getDate(),
+                        reservationDTO.getDescription()),
+                connection
+        );
+    }
+
+    @Override
+    public boolean deleteReservation(String reservationId, Connection connection) throws SQLException, ClassNotFoundException {
+        return reservationDAO.deleteReservation(reservationId,connection);
     }
 }

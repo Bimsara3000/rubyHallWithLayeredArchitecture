@@ -74,4 +74,24 @@ public class GuestDAOImpl implements GuestDAO {
         }
         return null;
     }
+
+    @Override
+    public String getGuestId(String guestName) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CrudUtil.execute("select guestId from guest where name = ?", guestName);
+
+        if (resultSet.next()){
+            return resultSet.getString(1);
+        }
+        return null;
+    }
+
+    @Override
+    public String getEmail(String guestName) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CrudUtil.execute("select email from guest where name = ?", guestName);
+
+        if (resultSet.next()){
+            return resultSet.getString(1);
+        }
+        return null;
+    }
 }

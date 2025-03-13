@@ -113,18 +113,7 @@ public class MainLayoutController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        Platform.runLater(() -> {
-//            anchMainLayout.setTopAnchor(anchBlank, 0.0);
-//            anchMainLayout.setBottomAnchor(anchBlank, 0.0);
-//            anchMainLayout.setRightAnchor(anchBlank, 0.0);
-//            anchMainLayout.setTopAnchor(anchLeft, 0.0);
-//            anchMainLayout.setBottomAnchor(anchLeft, 0.0);
-//            anchMainLayout.setLeftAnchor(anchLeft, 0.0);
-//            anchLeft.setTopAnchor(vBoxMainLayout, 0.0);
-//            anchLeft.setBottomAnchor(vBoxMainLayout, 0.0);
-//            anchLeft.setLeftAnchor(vBoxMainLayout, 0.0);
-//            anchLeft.setRightAnchor(vBoxMainLayout, 750.0);
-//        });
+        navigateTo("/lk.ijse.gdse71.rubyhallwithlayeredarchitecture/Reservations.fxml");
         disableButtons();
     }
 }

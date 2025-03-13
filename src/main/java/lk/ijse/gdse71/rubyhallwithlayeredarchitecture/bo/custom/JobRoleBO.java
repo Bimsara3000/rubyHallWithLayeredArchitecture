@@ -13,4 +13,7 @@ public interface JobRoleBO extends SuperBO {
     public ArrayList<JobRoleDTO> getAll() throws SQLException, ClassNotFoundException;
     public ArrayList<String> getJobRoles() throws SQLException, ClassNotFoundException;
     public String getJobRoleId(String name) throws SQLException, ClassNotFoundException;
+    public boolean save(JobRoleDTO jobRoleDTO) throws SQLException, ClassNotFoundException;
+    public boolean update(JobRoleDTO jobRoleDTO) throws SQLException, ClassNotFoundException;
+    public boolean delete(String jobRoleId) throws SQLException, ClassNotFoundException;
 }

@@ -1,5 +1,6 @@
 package lk.ijse.gdse71.rubyhallwithlayeredarchitecture.controller;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,6 +18,8 @@ import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.BOFactory;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.bo.custom.*;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.db.DBConnection;
 import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.dto.*;
+import lk.ijse.gdse71.rubyhallwithlayeredarchitecture.view.tdm.ReservationTM;
+import lombok.Setter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,10 +29,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-public class AddReservationViewController implements Initializable {
+public class UpdateReservationViewController implements Initializable {
 
     @FXML
-    private Button btnAdd;
+    private Button btnUpdate;
 
     @FXML
     private Button btnChooseRoom;
@@ -72,6 +75,9 @@ public class AddReservationViewController implements Initializable {
 
     public static String roomIds;
 
+    @Setter
+    ReservationTM reservationTM;
+
     ReservationBO reservationBO = (ReservationBO) BOFactory.getInstance().getBO(BOFactory.BOType.RESERVATION);
     UserBO userBO = (UserBO) BOFactory.getInstance().getBO(BOFactory.BOType.USER);
     GuestBO guestBO = (GuestBO) BOFactory.getInstance().getBO(BOFactory.BOType.GUEST);
@@ -82,7 +88,7 @@ public class AddReservationViewController implements Initializable {
 
     Connection connection = DBConnection.getInstance().getConnection();
 
-    public AddReservationViewController() throws SQLException {
+    public UpdateReservationViewController() throws SQLException {
     }
 
     @FXML
@@ -101,7 +107,7 @@ public class AddReservationViewController implements Initializable {
     }
 
     @FXML
-    void onClickAdd(ActionEvent event) throws SQLException {
+    void onClickUpdate(ActionEvent event) throws SQLException {
         String resId = lblResId.getText();
         String userId = LoginController.userId;
         String startDate = "";
@@ -178,53 +184,71 @@ public class AddReservationViewController implements Initializable {
                         desc
                 );
 
-                boolean reservationSaved = reservationBO.saveReservation(reservationDTO,connection);
+                boolean reservationSaved = reservationBO.updateReservation(reservationDTO,connection);
 
                 if (reservationSaved) {
-                    String[] roomArray = rooms.split(",");
 
-                    boolean reservationRoomSaved = true;
+                    boolean reservationRoomDeleted = reservationRoomBO.deleteReservationRoom(resId,connection);
 
-                    for (int i = 0; i < roomArray.length; i++) {
-                        boolean isSaved = reservationRoomBO.saveReservationRoom(new ReservationRoomDTO(
-                                resId,
-                                roomArray[i],
-                                startDate,
-                                endDate),
-                                connection
-                        );
+                    if (reservationRoomDeleted) {
+                        String[] roomArray = rooms.split(",");
 
-                        if (!isSaved) {
-                            reservationRoomSaved = false;
+                        boolean reservationRoomSaved = true;
+
+                        for (int i = 0; i < roomArray.length; i++) {
+                            boolean isSaved = reservationRoomBO.saveReservationRoom(new ReservationRoomDTO(
+                                            resId,
+                                            roomArray[i],
+                                            startDate,
+                                            endDate),
+                                    connection
+                            );
+
+                            if (!isSaved) {
+                                reservationRoomSaved = false;
+                            }
                         }
-                    }
 
-                    if (reservationRoomSaved) {
+                        if (reservationRoomSaved) {
 
-                        boolean reservationServiceSaved = reservationServiceBO.saveReservationService(new ReservationServiceDTO(
-                                serviceBO.getServiceId(service),
-                                resId,
-                                Integer.parseInt(serviceDuration)),
-                                connection
-                        );
+                            boolean reservationServiceDeleted = reservationServiceBO.deleteReservationService(resId,connection);
 
-                        if (reservationServiceSaved) {
-                            connection.commit();
-                            refreshPage();
-                            new Alert(Alert.AlertType.INFORMATION, "Reservation saved!").show();
+                            if (reservationServiceDeleted) {
+
+                                boolean reservationServiceSaved = reservationServiceBO.saveReservationService(new ReservationServiceDTO(
+                                                serviceBO.getServiceId(service),
+                                                resId,
+                                                Integer.parseInt(serviceDuration)),
+                                        connection
+                                );
+
+                                if (reservationServiceSaved) {
+                                    connection.commit();
+                                    refreshPage();
+                                    new Alert(Alert.AlertType.INFORMATION, "Reservation updated!").show();
+                                    Stage stage = (Stage) btnUpdate.getScene().getWindow();
+                                    stage.close();
+                                } else {
+                                    connection.rollback();
+                                    new Alert(Alert.AlertType.ERROR, "Failed to update reservation!").show();
+                                }
+
+                            } else {
+                                connection.rollback();
+                                new Alert(Alert.AlertType.ERROR, "Failed to update reservation!").show();
+                            }
                         } else {
                             connection.rollback();
-                            new Alert(Alert.AlertType.ERROR, "Failed to save reservation!").show();
+                            new Alert(Alert.AlertType.ERROR, "Failed to update reservation!").show();
                         }
 
                     } else {
                         connection.rollback();
-                        new Alert(Alert.AlertType.ERROR, "Failed to save reservation!").show();
+                        new Alert(Alert.AlertType.ERROR, "Failed to update reservation!").show();
                     }
-
                 } else {
                     connection.rollback();
-                    new Alert(Alert.AlertType.ERROR, "Failed to save reservation!").show();
+                    new Alert(Alert.AlertType.ERROR, "Failed to update reservation!").show();
                 }
 
             } catch (SQLException e) {
@@ -314,18 +338,6 @@ public class AddReservationViewController implements Initializable {
         refreshPage();
     }
 
-    public void loadNextResId() {
-        try {
-            String nextResId = reservationBO.getNextId();
-            lblResId.setText(nextResId);
-        } catch (SQLException e) {
-            new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            new Alert(Alert.AlertType.ERROR, "Class not found!").show();
-        }
-    }
-
     private void loadGuests() throws SQLException {
         try {
             ArrayList<GuestDTO> guestDTOS = guestBO.getAll();
@@ -378,8 +390,6 @@ public class AddReservationViewController implements Initializable {
     }
 
     private void refreshPage() {
-        loadNextResId();
-
         try {
             loadGuests();
             loadPackages();
@@ -412,7 +422,37 @@ public class AddReservationViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        loadNextResId();
+        Platform.runLater(() -> {
+            if (reservationTM == null) {
+                System.out.println("Null Reservation TM!");
+                return;
+            }
+
+            lblResId.setText(reservationTM.getReservationId());
+            lblRoomId.setText(reservationTM.getRoomIds());
+            roomIds = reservationTM.getRoomIds();
+            cmbGuest.setValue(reservationTM.getGuestName());
+            cmbPackage.setValue(reservationTM.getPackageName());
+            cmbService.setValue(reservationTM.getServices());
+
+            try {
+                String date = reservationTM.getResDate();
+                String[] dates = date.split(" : ");
+
+                dPSDate.setValue(LocalDate.parse(dates[0]));
+                dPEDate.setValue(LocalDate.parse(dates[1]));
+                txtServiceDuration.setText(reservationServiceBO.getDuration(reservationTM.getReservationId()));
+            } catch (SQLException e) {
+                new Alert(Alert.AlertType.ERROR, "Can't connect to Database!").show();
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                new Alert(Alert.AlertType.ERROR, "Class not found!").show();
+            }
+
+            txtGuestCount.setText(Integer.toString(reservationTM.getGuestCount()));
+            txtDesc.setText(reservationTM.getDescription());
+        });
+
         try {
             loadGuests();
             loadPackages();

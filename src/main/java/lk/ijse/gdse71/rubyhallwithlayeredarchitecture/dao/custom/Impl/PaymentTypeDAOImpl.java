@@ -18,6 +18,16 @@ public class PaymentTypeDAOImpl implements PaymentTypeDAO {
         return null;
     }
 
+    @Override
+    public String getPaymentTypeId(String paymentType) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CrudUtil.execute("select paymentTypeId from paymentType where description = ?", paymentType);
+
+        if (resultSet.next()){
+            return resultSet.getString(1);
+        }
+        return null;
+    }
+
     public String getNextId() throws SQLException, ClassNotFoundException {
         ResultSet rst = CrudUtil.execute("select paymentTypeId from paymentType order by paymentTypeId desc limit 1");
 

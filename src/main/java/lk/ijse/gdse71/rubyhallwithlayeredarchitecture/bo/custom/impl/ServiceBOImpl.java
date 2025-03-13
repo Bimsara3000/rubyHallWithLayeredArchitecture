@@ -46,4 +46,9 @@ public class ServiceBOImpl implements ServiceBO {
     public boolean delete(String serviceId) throws SQLException, ClassNotFoundException {
         return serviceDAO.delete(serviceId);
     }
+
+    @Override
+    public String getServiceId(String service) throws SQLException, ClassNotFoundException {
+        return serviceDAO.getServiceId(service);
+    }
 }

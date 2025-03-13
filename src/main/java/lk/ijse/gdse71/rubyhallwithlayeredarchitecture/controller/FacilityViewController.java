@@ -58,7 +58,7 @@ public class FacilityViewController implements Initializable {
         FacilityTM facilityTM = tblFacility.getSelectionModel().getSelectedItem();
 
         if (facilityTM == null) {
-            new Alert(Alert.AlertType.ERROR, "Please select a Facility!").show();
+            new Alert(Alert.AlertType.ERROR, "Please select a facility!").show();
             return;
         }
 
@@ -71,7 +71,7 @@ public class FacilityViewController implements Initializable {
                 boolean isDeleted = facilityBO.delete(facilityTM.getFacilityId());
                 if (isDeleted) {
                     new Alert(Alert.AlertType.INFORMATION, "The facility is deleted!").show();
-                    loadTable();
+                    refresh();
                 } else {
                     new Alert(Alert.AlertType.ERROR, "Failed to delete the facility!").show();
                 }
@@ -240,6 +240,8 @@ public class FacilityViewController implements Initializable {
         loadTable();
         txtDesc.setText("");
         txtPrice.setText("");
+        btnDelete.setDisable(true);
+        btnUpdate.setDisable(true);
     }
 
     @Override

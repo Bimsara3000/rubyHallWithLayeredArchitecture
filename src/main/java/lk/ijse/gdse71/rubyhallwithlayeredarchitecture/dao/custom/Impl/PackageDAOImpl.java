@@ -80,4 +80,14 @@ public class PackageDAOImpl implements PackageDAO {
                 packageId
         );
     }
+
+    @Override
+    public String getPackageId(String packages) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CrudUtil.execute("select packageId from package where name = ?", packages);
+
+        if (resultSet.next()){
+            return resultSet.getString(1);
+        }
+        return null;
+    }
 }

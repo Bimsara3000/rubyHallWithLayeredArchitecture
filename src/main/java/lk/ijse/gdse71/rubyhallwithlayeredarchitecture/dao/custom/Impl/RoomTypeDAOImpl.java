@@ -32,18 +32,31 @@ public class RoomTypeDAOImpl implements RoomTypeDAO {
     }
 
     @Override
-    public boolean save(RoomType dto) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean save(RoomType roomType) throws SQLException, ClassNotFoundException {
+        return CrudUtil.execute(
+                "insert into roomType values (?,?,?)",
+                roomType.getRoomTypeId(),
+                roomType.getDescription(),
+                roomType.getPrice()
+        );
     }
 
     @Override
-    public boolean update(RoomType dto) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean update(RoomType roomType) throws SQLException, ClassNotFoundException {
+        return CrudUtil.execute(
+                "update roomType set description=?,price=? where roomTypeId=?",
+                roomType.getDescription(),
+                roomType.getPrice(),
+                roomType.getRoomTypeId()
+        );
     }
 
     @Override
-    public boolean delete(String id) throws SQLException, ClassNotFoundException {
-        return false;
+    public boolean delete(String roomTypeId) throws SQLException, ClassNotFoundException {
+        return CrudUtil.execute(
+                "delete from roomType where roomTypeId = ?",
+                roomTypeId
+        );
     }
 
     public ArrayList<RoomType> getAll() throws SQLException, ClassNotFoundException {

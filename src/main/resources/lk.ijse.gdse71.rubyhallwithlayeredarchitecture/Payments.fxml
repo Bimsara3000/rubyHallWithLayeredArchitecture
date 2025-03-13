@@ -14,7 +14,7 @@
    <children>
       <VBox layoutX="14.0" layoutY="149.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="150.0">
          <children>
-            <TableView fx:id="tblPayment" prefHeight="614.0" prefWidth="933.0">
+            <TableView fx:id="tblPayment" onMouseClicked="#OnClickRow" prefHeight="614.0" prefWidth="933.0">
               <columns>
                 <TableColumn fx:id="tColPaymentId" prefWidth="131.99996662139893" text="Payment ID" />
                 <TableColumn fx:id="tColGuestName" prefWidth="217.5999755859375" text="Guest Name" />

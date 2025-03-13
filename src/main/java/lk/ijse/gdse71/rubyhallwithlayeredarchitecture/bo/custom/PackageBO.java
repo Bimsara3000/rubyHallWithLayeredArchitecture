@@ -13,4 +13,5 @@ public interface PackageBO extends SuperBO {
     public boolean update(PackageDTO packageDTO) throws SQLException, ClassNotFoundException;
     public boolean save(PackageDTO packageDTO) throws SQLException, ClassNotFoundException;
     public boolean delete(String packageId) throws SQLException, ClassNotFoundException;
+    public String getPackageId(String packages) throws SQLException, ClassNotFoundException;
 }

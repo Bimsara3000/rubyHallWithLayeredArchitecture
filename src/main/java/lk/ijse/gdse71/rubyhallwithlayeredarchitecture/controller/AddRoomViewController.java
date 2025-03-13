@@ -93,7 +93,7 @@ public class AddRoomViewController implements Initializable {
                         state
                 );
 
-                boolean isSaved = roomBO.save(roomDTO);
+                boolean isSaved = roomBO.saveRoom(roomDTO,connection);
 
                 if (isSaved) {
                     if (cBoxBalcony.isSelected() || cBoxFireplace.isSelected() || cBoxGarden.isSelected() || cBoxJacuzzi.isSelected() || cBoxSauna.isSelected()) {

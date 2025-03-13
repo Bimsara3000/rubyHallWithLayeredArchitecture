@@ -116,15 +116,14 @@ public class RoomsController implements Initializable {
                     if (!room.getFacilities().isEmpty()) {
                         boolean isFacilitiesDeleted = roomFacilityBO.deleteFacilities(room.getRoomId(),connection);
 
-                        if (isFacilitiesDeleted) {
-
-                        } else {
-//                            new Alert(Alert.AlertType.ERROR, "Fail to delete this room!").show();
-//                            System.out.println("Facilities failed to delete!");
-//                            System.out.println("isFacilitiesDeleted: "+isFacilitiesDeleted);
-//                            loadTable();
+                        if (!isFacilitiesDeleted) {
                             connection.commit();
                             new Alert(Alert.AlertType.INFORMATION, "The room is deleted!").show();
+                            loadTable();
+                        } else {
+                            new Alert(Alert.AlertType.ERROR, "Fail to delete this room!").show();
+                            System.out.println("Facilities failed to delete!");
+                            System.out.println("isFacilitiesDeleted: "+isFacilitiesDeleted);
                             loadTable();
                         }
                     } else {
